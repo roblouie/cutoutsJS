@@ -1,10 +1,14 @@
-'use strict';
-export class GameEngine {
-    constructor() {
+class GameEngine {
+    canvas: HTMLCanvasElement;
+    context: CanvasRenderingContext2D;
 
+    setCanvas(canvasId) {
+      this.canvas = <HTMLCanvasElement> document.getElementById(canvasId);
+      this.context = this.canvas.getContext("2d");
     }
 
-    setupRequestAnimationFrame() {
+
+  setupRequestAnimationFrame() {
         var lastTime = 0;
         var currTime, timeToCall, id;
         var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -13,9 +17,8 @@ export class GameEngine {
             window.cancelAnimationFrame =
                 window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
         }
-        if (!window.requestAnimationFrame)
-        {
-            window.requestAnimationFrame = function(callback, element) {
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function(callback) {
                 currTime = Date.now();
                 timeToCall = Math.max(0, 16 - (currTime - lastTime));
                 id = window.setTimeout(function() { callback(currTime + timeToCall); },
@@ -32,3 +35,5 @@ export class GameEngine {
         }
     }
 }
+
+export const gameEngine = new GameEngine();

@@ -40,22 +40,22 @@ export class Camera {
         // keep following the player (or other desired object)
         if(this.followed != null)
         {
-            if(this.axis == Camera.getAxisTypes().HORIZONTAL || this.axis == Camera.getAxisTypes().BOTH)
+            if(this.axis === Camera.getAxisTypes().HORIZONTAL || this.axis === Camera.getAxisTypes().BOTH)
             {
                 // moves camera on horizontal axis based on followed object position
-                if(this.followed.x - this.xView  + this.xDeadZone > this.wView)
-                    this.xView = this.followed.x - (this.wView - this.xDeadZone);
-                else if(this.followed.x  - this.xDeadZone < this.xView)
-                    this.xView = this.followed.x  - this.xDeadZone;
+                if(this.followed.position.x - this.xView  + this.xDeadZone > this.wView)
+                    this.xView = this.followed.position.x - (this.wView - this.xDeadZone);
+                else if(this.followed.position.x  - this.xDeadZone < this.xView)
+                    this.xView = this.followed.position.x  - this.xDeadZone;
 
             }
-            if(this.axis == Camera.getAxisTypes().VERTICAL || this.axis == Camera.getAxisTypes().BOTH)
+            if(this.axis === Camera.getAxisTypes().VERTICAL || this.axis === Camera.getAxisTypes().BOTH)
             {
                 // moves camera on vertical axis based on followed object position
-                if(this.followed.y - this.yView + this.yDeadZone > this.hView)
-                    this.yView = this.followed.y - (this.hView - this.yDeadZone);
-                else if(this.followed.y - this.yDeadZone < this.yView)
-                    this.yView = this.followed.y - this.yDeadZone;
+                if(this.followed.position.y - this.yView + this.yDeadZone > this.hView)
+                    this.yView = this.followed.position.y - (this.hView - this.yDeadZone);
+                else if(this.followed.position.y - this.yDeadZone < this.yView)
+                    this.yView = this.followed.position.y - this.yDeadZone;
             }
 
         }
