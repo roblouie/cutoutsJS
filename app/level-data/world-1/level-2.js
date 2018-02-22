@@ -45,14 +45,14 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "-5 640 1310 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: -5, y: 640, width: 1310, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "0 0 30 640",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 0, y: 0, width: 30, height: 640 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -148,19 +148,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "1210 640 800 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 1210, y: 640, width: 800, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "2000 545 380 110",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 2000, y: 545, width: 380, height: 110 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "2380 570 190 150",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 2380, y: 570, width: 190, height: 150 },
+                passable: false,
+                killsYou: true
               }
             ]
           },
@@ -409,19 +409,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "2275 575 1070 130",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 2275, y: 575, width: 1070, height: 130 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "3340 570 510 130",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 3340, y: 570, width: 510, height: 130 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "2580 450 1120 30",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 2580, y: 450, width: 1120, height: 30 },
+                passable: true,
+                killsYou: false
               }
             ]
           },
@@ -633,14 +633,14 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "3805 580 1330 120",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 3805, y: 580, width: 1330, height: 120 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "4220 450 910 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 4220, y: 450, width: 910, height: 40 },
+                passable: true,
+                killsYou: false
               }
             ]
           },
@@ -905,24 +905,24 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "5105 585 1310 110",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 5105, y: 585, width: 1310, height: 110 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "5120 450 1260 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 5120, y: 450, width: 1260, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "6340 260 50 300",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 6340, y: 260, width: 50, height: 300 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "5840 260 550 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 5840, y: 260, width: 550, height: 40 },
+                passable: true,
+                killsYou: false
               }
             ]
           },
@@ -1121,23 +1121,23 @@ export default {
             "Item": [
               {
                 "collisionBox": "7430 480 -640 205",
-                "passable": "false",
-                "killsYou": "true"
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "6780 480 460 230",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 6780, y: 480, width: 460, height: 230 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "7010 330 80 150",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 7010, y: 330, width: 80, height: 150 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "7230 600 480 130",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 7230, y: 600, width: 480, height: 130 },
+                passable: false,
+                killsYou: true
               }
             ]
           },
@@ -1418,19 +1418,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "7680 600 170 120",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 7680, y: 600, width: 170, height: 120 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "7820 380 140 330",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 7820, y: 380, width: 140, height: 330 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "7950 590 1020 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 7950, y: 590, width: 1020, height: 40 },
+                passable: true,
+                killsYou: false
               }
             ]
           },
@@ -1687,29 +1687,29 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "8945 590 530 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 8945, y: 590, width: 530, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "9190 360 290 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 9190, y: 360, width: 290, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "9460 180 450 540",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 9460, y: 180, width: 450, height: 540 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "9900 190 330 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 9900, y: 190, width: 330, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "9910 630 360 90",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 9910, y: 630, width: 360, height: 90 },
+                passable: false,
+                killsYou: true
               }
             ]
           },
@@ -1894,19 +1894,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "10350 350 850 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 10350, y: 350, width: 850, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "10240 630 150 90",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 10240, y: 630, width: 150, height: 90 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "10345 610 1190 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 10345, y: 610, width: 1190, height: 40 },
+                passable: true,
+                killsYou: false
               }
             ]
           },
@@ -2087,29 +2087,29 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "11520 610 210 30",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 11520, y: 610, width: 210, height: 30 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "11995 510 330 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 11995, y: 510, width: 330, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "11520 640 1300 80",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 11520, y: 640, width: 1300, height: 80 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "12470 290 320 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 12470, y: 290, width: 320, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "11710 610 140 30",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 11710, y: 610, width: 140, height: 30 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -2259,19 +2259,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "13260 500 320 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 13260, y: 500, width: 320, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "13820 390 120 240",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 13820, y: 390, width: 120, height: 240 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "12795 640 1310 80",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 12795, y: 640, width: 1310, height: 80 },
+                passable: false,
+                killsYou: true
               }
             ]
           },
@@ -2441,19 +2441,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "14075 645 1310 70",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 14075, y: 645, width: 1310, height: 70 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "14240 310 320 30",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 14240, y: 310, width: 320, height: 30 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "15020 330 320 30",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 15020, y: 330, width: 320, height: 30 },
+                passable: true,
+                killsYou: false
               }
             ]
           },
@@ -2607,19 +2607,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "15345 650 1310 60",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 15345, y: 650, width: 1310, height: 60 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "15690 510 320 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 15690, y: 510, width: 320, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "16300 420 160 210",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 16300, y: 420, width: 160, height: 210 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -2787,24 +2787,24 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "16640 650 500 50",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 16640, y: 650, width: 500, height: 50 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "16840 560 320 40",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 16840, y: 560, width: 320, height: 40 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "17120 500 160 210",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 17120, y: 500, width: 160, height: 210 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "17270 650 670 50",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 17270, y: 650, width: 670, height: 50 },
+                passable: true,
+                killsYou: false
               }
             ]
           },
@@ -2886,24 +2886,24 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "17920 650 1280 50",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 17920, y: 650, width: 1280, height: 50 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "18075 500 90 140",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 18075, y: 500, width: 90, height: 140 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "18410 410 310 30",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 18410, y: 410, width: 310, height: 30 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "18630 320 160 320",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 18630, y: 320, width: 160, height: 320 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -2989,49 +2989,49 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "19200 650 1250 50",
-                "passable": "true",
-                "killsYou": "false"
+                collisionBox: { x: 19200, y: 650, width: 1250, height: 50 },
+                passable: true,
+                killsYou: false
               },
               {
-                "collisionBox": "20230 655 440 50",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 20230, y: 655, width: 440, height: 50 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "19810 490 70 160",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 19810, y: 490, width: 70, height: 160 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "19750 560 60 80",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 19750, y: 560, width: 60, height: 80 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "19720 620 360 20",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 19720, y: 620, width: 360, height: 20 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "19880 500 20 120",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 19880, y: 500, width: 20, height: 120 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "19890 520 30 100",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 19890, y: 520, width: 30, height: 100 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "19920 550 60 90",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 19920, y: 550, width: 60, height: 90 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "19980 570 30 50",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 19980, y: 570, width: 30, height: 50 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -3249,24 +3249,24 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "20220 650 630 50",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 20220, y: 650, width: 630, height: 50 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "21140 570 160 160",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 21140, y: 570, width: 160, height: 160 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "21560 410 160 310",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 21560, y: 410, width: 160, height: 310 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "20830 670 960 50",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 20830, y: 670, width: 960, height: 50 },
+                passable: false,
+                killsYou: true
               }
             ]
           },
@@ -3444,19 +3444,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "21700 670 1010 50",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 21700, y: 670, width: 1010, height: 50 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "22180 580 150 160",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 22180, y: 580, width: 150, height: 160 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "22660 540 420 210",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 22660, y: 540, width: 420, height: 210 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -3577,14 +3577,14 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "22910 540 790 200",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 22910, y: 540, width: 790, height: 200 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "23660 380 700 350",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 23660, y: 380, width: 700, height: 350 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -3892,24 +3892,24 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "24260 380 430 340",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 24260, y: 380, width: 430, height: 340 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "24830 380 160 400",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 24830, y: 380, width: 160, height: 400 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "24670 650 950 80",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 24670, y: 650, width: 950, height: 80 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "25140 380 440 360",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 25140, y: 380, width: 440, height: 360 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -4071,19 +4071,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "25510 650 410 90",
-                "passable": "false",
-                "killsYou": "true"
+                collisionBox: { x: 25510, y: 650, width: 410, height: 90 },
+                passable: false,
+                killsYou: true
               },
               {
-                "collisionBox": "25890 490 930 250",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 25890, y: 490, width: 930, height: 250 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "26200 300 710 210",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 26200, y: 300, width: 710, height: 210 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -4213,14 +4213,14 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "26750 300 500 430",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 26750, y: 300, width: 500, height: 430 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "27220 640 1110 130",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 27220, y: 640, width: 1110, height: 130 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -4294,14 +4294,14 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "28070 640 640 80",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 28070, y: 640, width: 640, height: 80 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "28640 640 830 100",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 28640, y: 640, width: 830, height: 100 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -4376,19 +4376,19 @@ export default {
           "collisionBoxes": {
             "Item": [
               {
-                "collisionBox": "29350 640 700 100",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 29350, y: 640, width: 700, height: 100 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "29960 640 730 90",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 29960, y: 640, width: 730, height: 90 },
+                passable: false,
+                killsYou: false
               },
               {
-                "collisionBox": "30245 640 850 80",
-                "passable": "false",
-                "killsYou": "false"
+                collisionBox: { x: 30245, y: 640, width: 850, height: 80 },
+                passable: false,
+                killsYou: false
               }
             ]
           },
@@ -4428,9 +4428,9 @@ export default {
       ],
   backgroundFiles: [
     'world-1/skyBackground',
-    'world-1/backgroundLayer2',
     'world-1/backgroundLayer4',
     'world-1/backgroundLayer3',
+    'world-1/backgroundLayer2'
   ],
     "enemyFiles": {
       "Item": [

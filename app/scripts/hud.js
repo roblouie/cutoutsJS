@@ -1,5 +1,4 @@
 'use strict';
-import {Vector2} from './vector-2';
 
 export class Hud {
     constructor(coinsImagePath, livesImagePath, coinsOffset, livesOffset) {
@@ -12,8 +11,8 @@ export class Hud {
         this.livesOffset = livesOffset;
     }
 
-    draw(canvasContext) {
-        canvasContext.drawImage(this.coinsImage, this.coinsOffset.x, this.coinsOffset.y);
-        canvasContext.drawImage(this.livesImage, this.livesOffset.x, this.livesOffset.y);
+    draw(canvasContext, cameraPosition) {
+        canvasContext.drawImage(this.coinsImage, this.coinsOffset.x + cameraPosition, this.coinsOffset.y);
+        canvasContext.drawImage(this.livesImage, this.livesOffset.x + cameraPosition, this.livesOffset.y);
     }
 }

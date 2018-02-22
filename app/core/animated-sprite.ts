@@ -1,4 +1,5 @@
 import {Point} from './geometry/point';
+import {AnimationState} from './animation-state';
 
 export abstract class AnimatedSprite {
   protected spriteSheet: HTMLImageElement;
@@ -12,14 +13,16 @@ export abstract class AnimatedSprite {
 
   frameCounts: Point;
   currentFrame: Point;
+  currentAnimationState: AnimationState;
 
   constructor(frameWidth, frameHeight, frameCountX, frameCountY, spriteSheetSrc?: string) {
     this.frameSize.width = frameWidth;
     this.frameSize.height = frameHeight;
     this.frameCounts = new Point(frameCountX, frameCountY);
-    this.currentFrame = new Point(0, 0);
     this.position = new Point(0, 0);
     this.millisecondsSinceLastFrame = 0;
+    this.currentAnimationState = new AnimationState(0, 0, this.frameCounts.x, this.frameCounts.y);
+    this.currentFrame = new Point(this.currentAnimationState.startingFrame.x, this.currentAnimationState.startingFrame.y);
 
     if (spriteSheetSrc !== undefined) {
       this.setSpriteSheet(spriteSheetSrc);
@@ -39,8 +42,8 @@ export abstract class AnimatedSprite {
 
       this.currentFrame.x++;
 
-      if (this.currentFrame.x === this.frameCounts.x) {
-        this.currentFrame.x = 0;
+      if (this.currentFrame.x === this.currentAnimationState.endingFrame.x) {
+        this.currentFrame.x = this.currentAnimationState.startingFrame.x;
         this.gotoNextRow();
       }
     }
@@ -48,11 +51,17 @@ export abstract class AnimatedSprite {
     console.log(this.currentFrame.x, this.currentFrame.y);
   }
 
+  protected setAnimationState(animationState: AnimationState) {
+    this.currentAnimationState = animationState;
+    this.currentFrame.x = animationState.startingFrame.x;
+    this.currentFrame.y = animationState.startingFrame.y;
+  }
+
   protected gotoNextRow() {
     this.currentFrame.y++;
 
-    if (this.currentFrame.y === this.frameCounts.y) {
-      this.currentFrame.y = 0;
+    if (this.currentFrame.y > this.currentAnimationState.endingFrame.y) {
+      this.currentFrame.y = this.currentAnimationState.startingFrame.y;
     }
   }
 
