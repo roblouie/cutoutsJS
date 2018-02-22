@@ -1,14 +1,41 @@
 class Controls {
   private analogDeadZone = 0.15;
-  up: boolean;
-  down: boolean;
-  left: boolean;
-  right: boolean;
-  start: boolean;
-  leftStick = {
-    x: 0,
-    y: 0
+  keyboard = {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+    leftControl: false,
+    space: false
   };
+
+  start: boolean;
+
+  controller = {
+    leftStick: {
+      x: 0,
+      y: 0
+    },
+    dpad: {
+      up: false,
+      down: false,
+      left: false,
+      right: false
+    },
+    buttons: {
+      top: false,
+      right: false,
+      bottom: false,
+      left: false,
+      leftBumper: false,
+      rightBumper: false
+    },
+    triggers: {
+      left: 0,
+      right: 0
+    }
+  };
+
 
   gamePads: Gamepad[] = [];
   private doesBrowserSupportGamepadEvents: boolean;
@@ -20,16 +47,16 @@ class Controls {
       switch(event.keyCode)
       {
         case 37: // left arrow
-          this.left = true;
+          this.keyboard.left = true;
           break;
         case 38: // up arrow
-          this.up = true;
+          this.keyboard.up = true;
           break;
         case 39: // right arrow
-          this.right = true;
+          this.keyboard.right = true;
           break;
         case 40: // down arrow
-          this.down = true;
+          this.keyboard.down = true;
           break;
         case 80: // key P pauses the game
           this.start = true;
@@ -41,16 +68,16 @@ class Controls {
       switch(event.keyCode)
       {
         case 37: // left arrow
-          this.left = false;
+          this.keyboard.left = false;
           break;
         case 38: // up arrow
-          this.up = false;
+          this.keyboard.up = false;
           break;
         case 39: // right arrow
-          this.right = false;
+          this.keyboard.right = false;
           break;
         case 40: // down arrow
-          this.down = false;
+          this.keyboard.down = false;
           break;
         case 80: // key P pauses the game
           this.start = false;
@@ -84,9 +111,19 @@ class Controls {
     if (this.gamePads.length) {
       const xAxis = this.gamePads[0].axes[0];
       const yAxis = this.gamePads[0].axes[1];
+      const rightTrigger = this.gamePads[0].buttons[7].value;
+      const leftTrigger = this.gamePads[0].buttons[6].value;
 
-      this.leftStick.x = Math.abs(xAxis) > this.analogDeadZone ? xAxis : 0;
-      this.leftStick.y = Math.abs(yAxis) > this.analogDeadZone ? yAxis : 0;
+      this.controller.leftStick.x = Math.abs(xAxis) > this.analogDeadZone ? xAxis : 0;
+      this.controller.leftStick.y = Math.abs(yAxis) > this.analogDeadZone ? yAxis : 0;
+      this.controller.buttons.bottom = this.gamePads[0].buttons[0].pressed;
+      this.controller.buttons.right = this.gamePads[0].buttons[1].pressed;
+      this.controller.buttons.left = this.gamePads[0].buttons[2].pressed;
+      this.controller.buttons.top = this.gamePads[0].buttons[3].pressed;
+      this.controller.buttons.leftBumper = this.gamePads[0].buttons[4].pressed;
+      this.controller.buttons.rightBumper = this.gamePads[0].buttons[5].pressed;
+      this.controller.triggers.left = Math.abs(leftTrigger) > this.analogDeadZone ? leftTrigger : 0;
+      this.controller.triggers.right = Math.abs(rightTrigger) > this.analogDeadZone ? rightTrigger : 0;
     }
   }
 
