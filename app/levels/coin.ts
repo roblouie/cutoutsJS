@@ -1,23 +1,21 @@
 import {Point} from '../core/geometry/point';
 import {Rectangle} from '../core/geometry/rectangle';
 import {gameEngine} from '../scripts/game-engine';
+import { SourceImage } from "../core/source-image";
 
 export class Coin {
   position: Point;
-  private image: HTMLImageElement;
-  private imageSource: string = '../images/coin.png';
+  private static SourceImage: SourceImage = new SourceImage('../images/coin.png');
   private size: number = 56;
   private collisionRectangle: Rectangle;
 
   constructor(x: number, y: number) {
     this.position = new Point(x, y);
-    this.image = new Image();
-    this.image.src = this.imageSource;
     this.collisionRectangle = new Rectangle(x, y, this.size, this.size);
   }
 
   draw() {
-    gameEngine.context.drawImage(this.image, this.position.x, this.position.y);
+    gameEngine.context.drawImage(Coin.SourceImage.image, this.position.x, this.position.y);
 
     if (gameEngine.isDebugMode) {
      this.drawDebug();

@@ -3,6 +3,7 @@ class GameEngine {
     canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
     previousXPosition: number = 0;
+  millisecondsSinceLast: number = 0;
 
     get context() {
       return this._context;
@@ -30,6 +31,7 @@ class GameEngine {
     }
 
 
+  // This is just a polyfill, research if it's needed anymore.
   setupRequestAnimationFrame() {
         var lastTime = 0;
         var currTime, timeToCall, id;

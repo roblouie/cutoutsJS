@@ -1,6 +1,10 @@
 import defaultExport from '../level-data/world-1/level-2';
 import {gameEngine} from '../scripts/game-engine';
 import {Coin} from './coin';
+import {GroundCrawler} from "../enemies/ground-crawler";
+import {Enemy} from "../enemies/enemy";
+import {Rabbit} from "../enemies/rabbit";
+import {Bee} from "../enemies/bee";
 
 export class Map {
   width: number;
@@ -36,6 +40,7 @@ export class Map {
     console.log(this.artFiles);
     this.loadArtFiles();
     this.loadCoins();
+    this.loadEnemies();
   }
 
   // draw the map adjusted to camera
@@ -56,6 +61,7 @@ export class Map {
     this.currentSectors.forEach(playableSector => {
       this.drawLevelForeground(playableSector);
       this.drawCoins(playableSector);
+      this.drawEnemies(playableSector);
 
       if (gameEngine.isDebugMode) {
         this.drawDebug(playableSector);
@@ -76,6 +82,10 @@ export class Map {
 
   private drawCoins(playableSector) {
     playableSector.coins.forEach(coin => coin.draw());
+  }
+
+  private drawEnemies(playableSector) {
+    playableSector.enemies.forEach(enemy => enemy.draw());
   }
 
   private populateCurrentSectors(cameraPosition) {
@@ -150,6 +160,42 @@ export class Map {
         });
       }
     });
+  }
+
+  private loadEnemies() {
+    this.levelData.playableSectors.forEach(playableSector => {
+      // The microsoft xml to json results in the enemy positions being either undefined
+      // a list of enemies, or a single enemy.
+      const enemyDataRaw = playableSector.enemyPositions.Item;
+
+      playableSector.enemies = new Array<Enemy>();
+
+     if (Array.isArray(enemyDataRaw)) {
+        // For the list of enemy positions we convert them into enemy objects of the right type
+        playableSector.enemies = enemyDataRaw.map(enemy => {
+          return this.getEnemyFromEnemyPosition(enemy);
+        });
+      } else if (enemyDataRaw !== undefined) {
+        // For the single enemy object, we wrap it it in an array
+        playableSector.enemies.push(this.getEnemyFromEnemyPosition(enemyDataRaw));
+      }
+    });
+  }
+
+  private getEnemyFromEnemyPosition(enemyPosition): Enemy {
+    let enemy: Enemy;
+    switch(enemyPosition.enemyType) {
+      case 'Rabbit':
+        enemy = new Rabbit(enemyPosition.position.x, enemyPosition.position.y);
+        break;
+      case 'GroundCrawler':
+        enemy = new GroundCrawler(enemyPosition.position.x, enemyPosition.position.y);
+        break;
+      case 'Bee':
+        enemy = new Bee(enemyPosition.position.x, enemyPosition.position.y);
+        break;
+    }
+    return enemy;
   }
 }
 

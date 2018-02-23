@@ -65,10 +65,11 @@ const Game = { play: null, togglePause: null, controls: null };
     now = timestamp; // <-- current timestamp (in milliseconds)
     step = now - last; // <-- time between frames (in seconds)
     last = now; // <-- store the current timestamp for further evaluation in next frame/step
+    gameEngine.millisecondsSinceLast = step;
     update(step);
     draw(step);
     runningId = requestAnimationFrame(gameLoop); // <-- added
-  }
+  };
 
   // ---configure play/pause capabilities:
 

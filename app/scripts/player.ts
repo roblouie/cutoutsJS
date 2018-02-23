@@ -71,8 +71,8 @@ export class Player extends AnimatedSprite {
         this.currentAnimationState = this.states.moving;
     }
 
-    update(millisecondsSinceLast){
-      this.millisecondsSinceLastFrame += millisecondsSinceLast;
+    update(){
+      this.millisecondsSinceLastFrame += gameEngine.millisecondsSinceLast;
 
       if (this.millisecondsSinceLastFrame > this.millisecondsPerFrame) {
         this.millisecondsSinceLastFrame = 0;
@@ -247,7 +247,7 @@ export class Player extends AnimatedSprite {
     }
 
     drawPlayer(context, millisecondsSinceLast, currentSectors) {
-      this.update(millisecondsSinceLast);
+      this.update();
       this.updateFromUserInput();
       this.physics(millisecondsSinceLast / 1000, currentSectors);
       this.updateAnimationState();

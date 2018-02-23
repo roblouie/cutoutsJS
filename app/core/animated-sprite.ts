@@ -1,5 +1,6 @@
 import {Point} from './geometry/point';
 import {AnimationState} from './animation-state';
+import {gameEngine} from "../scripts/game-engine";
 
 export abstract class AnimatedSprite {
   protected spriteSheet: HTMLImageElement;
@@ -21,7 +22,7 @@ export abstract class AnimatedSprite {
     this.frameCounts = new Point(frameCountX, frameCountY);
     this.position = new Point(0, 0);
     this.millisecondsSinceLastFrame = 0;
-    this.currentAnimationState = new AnimationState(0, 0, this.frameCounts.x, this.frameCounts.y);
+    this.currentAnimationState = new AnimationState(0, 0, this.frameCounts.x - 1, this.frameCounts.y - 1);
     this.currentFrame = new Point(this.currentAnimationState.startingFrame.x, this.currentAnimationState.startingFrame.y);
 
     if (spriteSheetSrc !== undefined) {
@@ -34,15 +35,17 @@ export abstract class AnimatedSprite {
     this.spriteSheet.src = spriteSheetSrc;
   }
 
-  protected update(millisecondsSinceLast: number) {
-    this.millisecondsSinceLastFrame += millisecondsSinceLast;
+  protected update() {
+    this.millisecondsSinceLastFrame += gameEngine.millisecondsSinceLast;
 
     if (this.millisecondsSinceLastFrame > this.millisecondsPerFrame) {
       this.millisecondsSinceLastFrame = 0;
 
       this.currentFrame.x++;
+      const isOnLastRow = this.currentAnimationState.endingFrame.y === this.currentFrame.y;
+      const finalXPos = isOnLastRow ? this.currentAnimationState.endingFrame.x : (this.frameCounts.x - 1);
 
-      if (this.currentFrame.x === this.currentAnimationState.endingFrame.x) {
+      if (this.currentFrame.x > finalXPos) {
         this.currentFrame.x = this.currentAnimationState.startingFrame.x;
         this.gotoNextRow();
       }
@@ -65,12 +68,12 @@ export abstract class AnimatedSprite {
     }
   }
 
-  draw(context, millisecondsSinceLast) {
-    this.update(millisecondsSinceLast);
+  draw() {
+    this.update();
     const sourceX = this.currentFrame.x * this.frameSize.width;
     const sourceY = this.currentFrame.y * this.frameSize.height;
 
-    context.drawImage(this.spriteSheet,
+    gameEngine.context.drawImage(this.spriteSheet,
       sourceX, sourceY, this.frameSize.width, this.frameSize.height,
       this.position.x, this.position.y, this.frameSize.width, this.frameSize.height);
   }
