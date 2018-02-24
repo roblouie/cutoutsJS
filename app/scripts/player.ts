@@ -164,35 +164,40 @@ export class Player extends AnimatedSprite {
       // Player is considered "not on the ground" until collision detection proves otherwise
       this.isOnGround = false;
 
-      currentSectors.forEach(playableSector => {
-        playableSector.collisionBoxes.Item.forEach(collisionItem => {
-          const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
-          const depth = this.collisionBox.getIntersectionDepth(collisionBox);
-          if (!depth.isZero()) {
-            const isVerticalCollision = Math.abs(depth.y) < Math.abs(depth.x);
-            const isHorizontalCollision = !isVerticalCollision;
-            const isCollidingFromAbove = this.collisionBox.bottom <= collisionBox.bottom;
-            const isCollidingFromBelow = !isCollidingFromAbove;
+      const currentCollisionBoxes = currentSectors.reduce((prev, curr) => {
+        return [...prev, ...curr.collisionBoxes.Item];
+      }, []);
 
-            if (isVerticalCollision && isCollidingFromAbove) { // standing on the box
-              this.isOnGround = true;
-              this.isJumpingAnimation = false;
-              this.position.y += depth.y;
-              this.velocity.y = 0;
-            }
+      currentCollisionBoxes.forEach(collisionItem => {
+        const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
+        const depth = this.collisionBox.getIntersectionDepth(collisionBox);
 
-            if (isVerticalCollision && isCollidingFromBelow && !collisionItem.passable) { // hitting head on the box
-              this.position.y += depth.y;
-              this.velocity.y = 0;
-            }
+        if (depth.isZero()) { // Stop if we aren't colliding with the current box
+          return;
+        }
 
-            if (isHorizontalCollision && !collisionItem.passable) { // walking into a wall
-              this.position.x += depth.x;
-              this.velocity.x = 0;
-              this.isStanding = true;
-            }
-          }
-        });
+        const isVerticalCollision = Math.abs(depth.y) < Math.abs(depth.x);
+        const isHorizontalCollision = !isVerticalCollision;
+        const isCollidingFromAbove = this.collisionBox.bottom <= collisionBox.bottom;
+        const isCollidingFromBelow = !isCollidingFromAbove;
+
+        if (isVerticalCollision && isCollidingFromAbove) { // standing on the box
+          this.isOnGround = true;
+          this.isJumpingAnimation = false;
+          this.position.y += depth.y;
+          this.velocity.y = 0;
+        }
+
+        if (isVerticalCollision && isCollidingFromBelow && !collisionItem.passable) { // hitting head on the box
+          this.position.y += depth.y;
+          this.velocity.y = 0;
+        }
+
+        if (isHorizontalCollision && !collisionItem.passable) { // walking into a wall
+          this.position.x += depth.x;
+          this.velocity.x = 0;
+          this.isStanding = true;
+        }
       });
     }
 
