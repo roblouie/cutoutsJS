@@ -85,7 +85,10 @@ export class Map {
   }
 
   private drawEnemies(playableSector) {
-    playableSector.enemies.forEach(enemy => enemy.draw());
+    playableSector.enemies.forEach(enemy => {
+      enemy.update(this.currentSectors);
+      enemy.draw();
+    });
   }
 
   private populateCurrentSectors(cameraPosition) {

@@ -4,9 +4,19 @@
     "node": ">=0.12.0"
   },
   "browserify": {
-    "transform": [["babelify", { "presets": ["es2015"] }]]
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
   },
   "devDependencies": {
+    "@types/vinyl-fs": "^2.4.8",
     "autoprefixer-core": "^5.1.8",
     "babel": "^6.23.0",
     "babel-core": "^6.26.0",

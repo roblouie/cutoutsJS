@@ -13,6 +13,8 @@ class GameEngine {
       return this._isDebugMode;
     }
 
+
+
     setCanvas(canvasId) {
       this.canvas = <HTMLCanvasElement> document.getElementById(canvasId);
       this._context = this.canvas.getContext("2d");
@@ -29,7 +31,6 @@ class GameEngine {
       this._context.translate(newPosition, 0);
       this.previousXPosition = xPosition - playerOffset;
     }
-
 
   // This is just a polyfill, research if it's needed anymore.
   setupRequestAnimationFrame() {

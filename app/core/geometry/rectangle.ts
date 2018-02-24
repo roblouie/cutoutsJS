@@ -31,14 +31,8 @@ export class Rectangle {
   }
 
   isIntersecting(otherRectangle: Rectangle): boolean {
-    const test = otherRectangle.left < this.right && otherRectangle.right > this.left &&
+    return otherRectangle.left < this.right && otherRectangle.right > this.left &&
       otherRectangle.top < this.bottom && otherRectangle.bottom > this.top;
-
-    if (test) {
-      console.log(otherRectangle, this);
-    }
-
-    return test;
   }
 
   getIntersectionDepth(otherRectangle: Rectangle): Point {

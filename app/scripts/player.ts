@@ -17,11 +17,11 @@ export class Player extends AnimatedSprite {
   private readonly maxRunSpeed: number = 20000;
   private readonly maxVelocity: Point = new Point(2000, 1700);
 
-    speed: number;
-    analogSpeed: number;
-    worldWidth: number;
-    worldHeight: number;
-    isFacingLeft: boolean;
+  speed: number;
+  analogSpeed: number;
+  worldWidth: number;
+  worldHeight: number;
+  isFacingLeft: boolean;
 
   private wantsToJump: boolean;
   private isJumping: boolean;
@@ -71,7 +71,7 @@ export class Player extends AnimatedSprite {
         this.currentAnimationState = this.states.moving;
     }
 
-    update(){
+    updateAnimationFrame(){
       this.millisecondsSinceLastFrame += gameEngine.millisecondsSinceLast;
 
       if (this.millisecondsSinceLastFrame > this.millisecondsPerFrame) {
@@ -129,8 +129,8 @@ export class Player extends AnimatedSprite {
 
       const uncappedVelocityX = this.velocity.x + this.movement.x * this.moveSpeed * millisecondsSinceLast;
       const uncappedVelocityY = this.velocity.y + this.gravity * millisecondsSinceLast;
-      this.velocity.x = MathHelper.clamp(uncappedVelocityX, this.maxVelocity.x * -1, this.maxVelocity.x);
-      this.velocity.y = MathHelper.clamp(uncappedVelocityY, this.maxVelocity.y * -1, this.maxVelocity.y);
+      this.velocity.x = MathHelper.Clamp(uncappedVelocityX, this.maxVelocity.x * -1, this.maxVelocity.x);
+      this.velocity.y = MathHelper.Clamp(uncappedVelocityY, this.maxVelocity.y * -1, this.maxVelocity.y);
 
       if (Math.abs(this.velocity.x) > 800) {
         this.millisecondsPerFrame = 30;
@@ -167,36 +167,33 @@ export class Player extends AnimatedSprite {
       currentSectors.forEach(playableSector => {
         playableSector.collisionBoxes.Item.forEach(collisionItem => {
           const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
-
           const depth = this.collisionBox.getIntersectionDepth(collisionBox);
           if (!depth.isZero()) {
-            const absDepthX = Math.abs(depth.x);
-            const absDepthY = Math.abs(depth.y);
+            const isVerticalCollision = Math.abs(depth.y) < Math.abs(depth.x);
+            const isHorizontalCollision = !isVerticalCollision;
+            const isCollidingFromAbove = this.collisionBox.bottom <= collisionBox.bottom;
+            const isCollidingFromBelow = !isCollidingFromAbove;
 
-            if (absDepthY < absDepthX || collisionItem.passable == true) {
+            if (isVerticalCollision && isCollidingFromAbove) { // standing on the box
+              this.isOnGround = true;
+              this.isJumpingAnimation = false;
+              this.position.y += depth.y;
+              this.velocity.y = 0;
+            }
 
-              if (this.previousBottom <= collisionBox.bottom) {
-                this.isOnGround = true;
-                this.isJumpingAnimation = false;
-              }
+            if (isVerticalCollision && isCollidingFromBelow && !collisionItem.passable) { // hitting head on the box
+              this.position.y += depth.y;
+              this.velocity.y = 0;
+            }
 
-              if (!collisionItem.passable || this.isOnGround) {
-                this.position.y += depth.y;
-                this.velocity.y = 0;
-              }
-            } else if (collisionItem.passable == false) {
+            if (isHorizontalCollision && !collisionItem.passable) { // walking into a wall
               this.position.x += depth.x;
-              if (absDepthY > absDepthX) {
-                this.isStanding = true;
-              } else {
-                this.velocity.y = 0;
-              }
+              this.velocity.x = 0;
+              this.isStanding = true;
             }
           }
         });
       });
-
-      this.previousBottom = this.collisionBox.bottom;
     }
 
     private jump(millisecondsSinceLast) {
@@ -247,7 +244,7 @@ export class Player extends AnimatedSprite {
     }
 
     drawPlayer(context, millisecondsSinceLast, currentSectors) {
-      this.update();
+      this.updateAnimationFrame();
       this.updateFromUserInput();
       this.physics(millisecondsSinceLast / 1000, currentSectors);
       this.updateAnimationState();

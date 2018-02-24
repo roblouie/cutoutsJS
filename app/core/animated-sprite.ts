@@ -5,6 +5,7 @@ import {gameEngine} from "../scripts/game-engine";
 export abstract class AnimatedSprite {
   protected spriteSheet: HTMLImageElement;
   protected millisecondsSinceLastFrame: number;
+  protected isFacingLeft: boolean = true;
   position: Point;
   millisecondsPerFrame: number;
   frameSize = {
@@ -35,7 +36,7 @@ export abstract class AnimatedSprite {
     this.spriteSheet.src = spriteSheetSrc;
   }
 
-  protected update() {
+  protected updateAnimationFrame() {
     this.millisecondsSinceLastFrame += gameEngine.millisecondsSinceLast;
 
     if (this.millisecondsSinceLastFrame > this.millisecondsPerFrame) {
@@ -50,8 +51,6 @@ export abstract class AnimatedSprite {
         this.gotoNextRow();
       }
     }
-
-    console.log(this.currentFrame.x, this.currentFrame.y);
   }
 
   protected setAnimationState(animationState: AnimationState) {
@@ -69,12 +68,22 @@ export abstract class AnimatedSprite {
   }
 
   draw() {
-    this.update();
+    this.updateAnimationFrame();
     const sourceX = this.currentFrame.x * this.frameSize.width;
     const sourceY = this.currentFrame.y * this.frameSize.height;
 
-    gameEngine.context.drawImage(this.spriteSheet,
-      sourceX, sourceY, this.frameSize.width, this.frameSize.height,
-      this.position.x, this.position.y, this.frameSize.width, this.frameSize.height);
+    if (this.isFacingLeft) {
+      gameEngine.context.drawImage(this.spriteSheet,
+        sourceX, sourceY, this.frameSize.width, this.frameSize.height,
+        this.position.x, this.position.y, this.frameSize.width, this.frameSize.height);
+    } else {
+      gameEngine.context.save();
+      gameEngine.context.translate(this.position.x, this.position.y);
+      gameEngine.context.scale(-1, 1);
+      gameEngine.context.drawImage(this.spriteSheet,
+        sourceX, sourceY, this.frameSize.width, this.frameSize.height,
+        this.frameSize.width * -1, 0, this.frameSize.width, this.frameSize.height);
+      gameEngine.context.restore();
+    }
   }
 }
