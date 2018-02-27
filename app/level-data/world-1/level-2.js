@@ -3280,7 +3280,7 @@ export default {
               {
                 "enemyTexture": "2",
                 "enemyType": "Bee",
-                position: { x: 21400, y: 320 }
+                position: { x: 21350, y: 320 }
               },
               {
                 "enemyTexture": "2",

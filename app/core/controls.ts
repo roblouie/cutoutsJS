@@ -6,6 +6,7 @@ class Controls {
     left: false,
     right: false,
     leftControl: false,
+    leftShift: false,
     space: false
   };
 
@@ -61,6 +62,12 @@ class Controls {
         case 80: // key P pauses the game
           this.start = true;
           break;
+        case 16: // shift key
+          this.keyboard.leftShift = true;
+          break;
+        case 32:
+          this.keyboard.space = true;
+          break;
       }
     }, false);
 
@@ -81,6 +88,12 @@ class Controls {
           break;
         case 80: // key P pauses the game
           this.start = false;
+          break;
+        case 16: // shift key
+          this.keyboard.leftShift = false;
+          break;
+        case 32:
+          this.keyboard.space = false;
           break;
       }
     }, false);
@@ -108,7 +121,7 @@ class Controls {
       this.scanForGamePads();
     }
 
-    if (this.gamePads.length) {
+    if (this.gamePads[0] !== null) { // if there is at least one gamepad
       const xAxis = this.gamePads[0].axes[0];
       const yAxis = this.gamePads[0].axes[1];
       const rightTrigger = this.gamePads[0].buttons[7].value;

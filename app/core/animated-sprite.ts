@@ -5,7 +5,7 @@ import {gameEngine} from "../scripts/game-engine";
 export abstract class AnimatedSprite {
   protected spriteSheet: HTMLImageElement;
   protected millisecondsSinceLastFrame: number;
-  protected isFacingLeft: boolean = true;
+  protected isHorizontalFlipped: boolean = true;
   position: Point;
   millisecondsPerFrame: number;
   frameSize = {
@@ -15,7 +15,7 @@ export abstract class AnimatedSprite {
 
   frameCounts: Point;
   currentFrame: Point;
-  currentAnimationState: AnimationState;
+  private currentAnimationState: AnimationState;
 
   constructor(frameWidth, frameHeight, frameCountX, frameCountY, spriteSheetSrc?: string) {
     this.frameSize.width = frameWidth;
@@ -54,9 +54,11 @@ export abstract class AnimatedSprite {
   }
 
   protected setAnimationState(animationState: AnimationState) {
-    this.currentAnimationState = animationState;
-    this.currentFrame.x = animationState.startingFrame.x;
-    this.currentFrame.y = animationState.startingFrame.y;
+    if (animationState !== this.currentAnimationState) {
+      this.currentAnimationState = animationState;
+      this.currentFrame.x = animationState.startingFrame.x;
+      this.currentFrame.y = animationState.startingFrame.y;
+    }
   }
 
   protected gotoNextRow() {
@@ -72,7 +74,7 @@ export abstract class AnimatedSprite {
     const sourceX = this.currentFrame.x * this.frameSize.width;
     const sourceY = this.currentFrame.y * this.frameSize.height;
 
-    if (this.isFacingLeft) {
+    if (this.isHorizontalFlipped) {
       gameEngine.context.drawImage(this.spriteSheet,
         sourceX, sourceY, this.frameSize.width, this.frameSize.height,
         this.position.x, this.position.y, this.frameSize.width, this.frameSize.height);

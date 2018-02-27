@@ -35,14 +35,18 @@ export class Rectangle {
       otherRectangle.top < this.bottom && otherRectangle.bottom > this.top;
   }
 
+  get center(): Point {
+    return new Point(this.left + this.width / 2, this.top + this.height / 2);
+  }
+
   getIntersectionDepth(otherRectangle: Rectangle): Point {
     const halfWidthMe = this.width / 2;
     const halfWidthOther = otherRectangle.width / 2;
     const halfHeightMe = this.height / 2;
     const halfHeightOther = otherRectangle.height / 2;
 
-    const centerMe = new Point(this.left + halfWidthMe, this.top + halfHeightMe);
-    const centerOther = new Point(otherRectangle.left + halfWidthOther, otherRectangle.top + halfHeightOther);
+    const centerMe = this.center;
+    const centerOther = otherRectangle.center;
 
     const distanceX = centerMe.x - centerOther.x;
     const distanceY = centerMe.y - centerOther.y;

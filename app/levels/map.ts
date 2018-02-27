@@ -86,7 +86,7 @@ export class Map {
 
   private drawEnemies(playableSector) {
     playableSector.enemies.forEach(enemy => {
-      enemy.update(this.currentSectors);
+      enemy.update(this.getCurrentCollisionBoxes());
       enemy.draw();
     });
   }
@@ -126,6 +126,13 @@ export class Map {
     this.backgrounds.push(new BackgroundLayer(imageSourceFour, 1280, 1280, 0.3));
 
     console.log(this.artFiles);
+  }
+
+  getCurrentCollisionBoxes() {
+    const currentCollisionBoxes = this.currentSectors.reduce((previous, current) => {
+      return [...previous, ...current.collisionBoxes.Item];
+    }, []);
+    return currentCollisionBoxes;
   }
 
   drawDebug(playableSector) {

@@ -6,8 +6,8 @@ import controls from '../core/controls';
 import {gameEngine} from './game-engine';
 import {Point} from '../core/geometry/point';
 import {Coin} from '../levels/coin';
+import {Enemy} from '../enemies/enemy';
 
-gameEngine.setupRequestAnimationFrame();
 gameEngine.setCanvas('gameCanvas');
 
 const Game = { play: null, togglePause: null, controls: null };
@@ -40,6 +40,15 @@ const Game = { play: null, togglePause: null, controls: null };
           coinArray.splice(index, 1);
         }
       });
+
+      map.currentSectors[0].enemies.forEach((enemy: Enemy, index, enemyArray) => {
+        const isPlayerEnemyCollision = player.collisionBox.isIntersecting(enemy.collisionBox) && !player.isDying;
+        const isPlayerJumpingOnHead = player.isFalling && player.collisionBox.bottom < enemy.collisionBox.center.y;
+        if (isPlayerEnemyCollision && isPlayerJumpingOnHead) {
+          enemyArray.splice(index, 1);
+          player.bounceOffEnemy();
+        }
+      });
     }
   };
 
@@ -53,7 +62,7 @@ const Game = { play: null, togglePause: null, controls: null };
     context.clearRect(0, 0, gameEngine.canvas.width, gameEngine.canvas.height);
     // redraw all objects
     map.draw(gameEngine.previousXPosition);
-    player.drawPlayer(context, step, map.currentSectors);
+    player.drawPlayer(context, step, map.getCurrentCollisionBoxes());
     gameEngine.scrollCanvas(player.position.x, map.width);
     hud.draw(context, gameEngine.previousXPosition);
   };

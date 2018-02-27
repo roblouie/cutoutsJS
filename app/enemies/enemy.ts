@@ -29,6 +29,13 @@ export abstract class Enemy extends AnimatedSprite {
       this.frameSize.height - this.collisionOffsetBottom);
   }
 
+  get killBox() {
+    return new Rectangle(this.position.x + this.killOffsetLeft,
+      this.position.y + this.killOffsetTop,
+      this.frameSize.width - (this.killOffsetRight * 2),
+      this.frameSize.height - this.killOffsetBottom);
+  }
+
   update(currentSectors) {
   }
 }

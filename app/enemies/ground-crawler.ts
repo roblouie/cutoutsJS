@@ -1,11 +1,8 @@
 import { Point } from "../core/geometry/point";
-import { SourceImage } from "../core/source-image";
-import { AnimatedSprite } from "../core/animated-sprite";
 import {Enemy} from "./enemy";
 import {gameEngine} from '../scripts/game-engine';
 import {MathHelper} from '../core/math-helper';
 import {Rectangle} from '../core/geometry/rectangle';
-import {createProject} from 'gulp-typescript';
 
 export class GroundCrawler extends Enemy {
   private static AnimationData = {
@@ -43,11 +40,11 @@ export class GroundCrawler extends Enemy {
     this.killOffsetBottom = 50;
   }
 
-  update(currentSectors) {
-    this.physicsAndCollision(currentSectors);
+  update(currentCollisionBoxes) {
+    this.physicsAndCollision(currentCollisionBoxes);
   }
 
-  physicsAndCollision(currentSectors) {
+  physicsAndCollision(currentCollisionBoxes) {
     const elapsed = gameEngine.millisecondsSinceLast / 1000;
     this.currentScreen = gameEngine.canvas.width;
     this.velocity.x = MathHelper.Clamp(this.velocity.x + this.movement * this.moveSpeed * elapsed, -this.maxVelocity.x, this.maxVelocity.x);
@@ -58,40 +55,36 @@ export class GroundCrawler extends Enemy {
     else
       this.velocity.x *= this.airDrag;
 
-    this.isFacingLeft = this.velocity.x < 0;
+    this.isHorizontalFlipped = this.velocity.x < 0;
 
     this.position.x += this.velocity.x * elapsed;
     this.position.y += this.velocity.y * elapsed;
 
     this.isOnGround = false;
 
-    currentSectors.forEach(playableSector => {
-      playableSector.collisionBoxes.Item.forEach(collisionItem => {
-        const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
+    currentCollisionBoxes.forEach(collisionItem => {
+      const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
 
-        const depth: Point = this.collisionBox.getIntersectionDepth(collisionBox);
-        const absDepthX = Math.abs(depth.x);
-        const absDepthY = Math.abs(depth.y);
+      const depth: Point = this.collisionBox.getIntersectionDepth(collisionBox);
 
-        if (!depth.isZero()) { // ignore collision boxes we aren't colliding with
-          if (absDepthY < absDepthX || collisionItem.passable) { // if enemey is colliding with floor or passable wall
-            this.velocity.y = 0;    // stop their vertical motion
+      if (depth.isZero()) { // ignore collision boxes we aren't colliding with
+       return;
+      }
 
-            // if enemy is above or at the same place as last frame they are on the ground
-            this.isOnGround = collisionBox.bottom >= this.previousBottom;
+      const isVerticalCollision = Math.abs(depth.y) < Math.abs(depth.x);
+      const isHorizontalCollision = !isVerticalCollision;
+      const isCollidingFromAbove = this.collisionBox.bottom <= collisionBox.bottom;
 
-            if (!collisionItem.passable || this.isOnGround) {  // if the floor is not passable or the enemy is on the ground
-              this.position.y += depth.y;  // push them out of the ground
-              this.velocity.y = 0;
-            }
-          } else if (!collisionItem.passable) { // enemy hit a non-passable wall
-            this.position.x += depth.x; // so push them out of the wall
-            this.movement *= -1; // and have them start walking in the opposite direction
-          }
-        }
+      if (isVerticalCollision && isCollidingFromAbove) { // standing on the box
+        this.isOnGround = true;
+        this.position.y += depth.y;
+        this.velocity.y = 0;
+      }
 
-        this.previousBottom = this.collisionBox.bottom;
-      });
+      if (isHorizontalCollision && !collisionItem.passable) { // walking into a wall
+        this.position.x += depth.x;
+        this.movement *= -1;
+      }
     });
   }
 
