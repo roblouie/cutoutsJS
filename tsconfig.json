@@ -14,9 +14,11 @@
         "lib": [
             "es2016",
             "dom"
-        ]
+        ],
+        "types": ["node"]
     },
     "files": [
-      "app/scripts/main.ts"
+      "src/scripts/main.ts",
+      "./custom.d.ts"
     ]
 }
