@@ -1,10 +1,10 @@
-import controls from '../core/controls';
 import {AnimatedSprite} from '../core/animated-sprite';
 import {Point} from '../core/geometry/point';
 import {MathHelper} from '../core/math-helper';
 import {AnimationState} from '../core/animation-state';
 import {Rectangle} from '../core/geometry/rectangle';
 import {gameEngine} from '../scripts/game-engine';
+import {GameControls} from "../scripts/game-controls";
 
 enum PlayerStates {
   Standing,
@@ -86,12 +86,12 @@ export class Player extends AnimatedSprite {
 
     switch (this.currentState) {
       case PlayerStates.Standing:
-        this.movement.x = controls.controller.leftStick.x;
-        if (controls.keyboard.left || controls.controller.dpad.left) {
+        this.movement.x = GameControls.LeftStick.X;
+        if (GameControls.Left) {
           this.movement.x = -1.0;
         }
 
-        if (controls.keyboard.right || controls.controller.dpad.right) {
+        if (GameControls.Right) {
           this.movement.x = 1.0;
         }
 
@@ -100,12 +100,12 @@ export class Player extends AnimatedSprite {
           this.setAnimationState(this.animationStates.moving);
         }
 
-        if (controls.keyboard.down || controls.controller.dpad.down || controls.controller.leftStick.y > 0.2) {
+        if (GameControls.Duck) {
           this.currentState = PlayerStates.Ducking;
           this.setAnimationState(this.animationStates.ducking);
         }
 
-        if (controls.controller.buttons.bottom) {
+        if (GameControls.Jump) {
           this.currentState = PlayerStates.Jumping;
           this.setAnimationState(this.animationStates.jumping);
         } else {
@@ -113,12 +113,12 @@ export class Player extends AnimatedSprite {
         }
         break;
       case PlayerStates.Moving:
-        this.movement.x = controls.controller.leftStick.x;
-        if (controls.keyboard.left || controls.controller.dpad.left) {
+        this.movement.x = GameControls.LeftStick.X;
+        if (GameControls.Left) {
           this.movement.x = -1.0;
         }
 
-        if (controls.keyboard.right || controls.controller.dpad.right) {
+        if (GameControls.Right) {
           this.movement.x = 1.0;
         }
 
@@ -128,10 +128,7 @@ export class Player extends AnimatedSprite {
           break;
         }
 
-        this.isRunning = controls.keyboard.leftShift
-          || controls.controller.buttons.left
-          || controls.controller.buttons.rightBumper
-          || controls.controller.triggers.right > 0;
+        this.isRunning = GameControls.Sprint;
 
         if (Math.abs(this.velocity.x) > 800) {
           this.millisecondsPerFrame = 30;
@@ -141,7 +138,7 @@ export class Player extends AnimatedSprite {
           this.millisecondsPerFrame = 80;
         }
 
-        if (controls.controller.buttons.bottom) {
+        if (GameControls.Jump) {
           this.currentState = PlayerStates.Jumping;
           this.setAnimationState(this.animationStates.jumping);
         } else {
@@ -149,36 +146,33 @@ export class Player extends AnimatedSprite {
         }
         break;
       case PlayerStates.Jumping:
-        if (controls.controller.buttons.bottom) {
+        if (GameControls.Jump) {
           this.jump();
         }
 
-        this.movement.x = controls.controller.leftStick.x;
-        if (controls.keyboard.left || controls.controller.dpad.left) {
+        this.movement.x = GameControls.LeftStick.X;
+        if (GameControls.Left) {
           this.movement.x = -1.0;
         }
 
-        if (controls.keyboard.right || controls.controller.dpad.right) {
+        if (GameControls.Right) {
           this.movement.x = 1.0;
         }
 
-        if(!controls.controller.buttons.bottom) {
+        if(!GameControls.Jump) {
           this.jumpTime = 0;
           this.isAbleToJump = true;
         }
 
-        this.isRunning = controls.keyboard.leftShift
-          || controls.controller.buttons.left
-          || controls.controller.buttons.rightBumper
-          || controls.controller.triggers.right > 0;
+        this.isRunning = GameControls.Sprint;
         break;
       case PlayerStates.Ducking:
-        if (!controls.keyboard.down && !controls.controller.dpad.down && controls.controller.leftStick.y < 0.2) {
+        if (!GameControls.Duck) {
           this.currentState = PlayerStates.Standing;
           this.setAnimationState(this.animationStates.standing);
         }
 
-        if (controls.keyboard.down || controls.controller.buttons.bottom) {
+        if (GameControls.Jump) {
           this.jump();
           this.currentState = PlayerStates.Jumping;
           this.setAnimationState(this.animationStates.jumping);
@@ -220,7 +214,8 @@ export class Player extends AnimatedSprite {
       const isCollidingFromAbove = this.collisionBox.bottom <= collisionBox.bottom;
       const isCollidingFromBelow = !isCollidingFromAbove;
 
-      if (isVerticalCollision && isCollidingFromAbove) { // standing on the box
+      if (isVerticalCollision && isCollidingFromAbove && this.currentState !== PlayerStates.Jumping) { // standing on the box
+        this.currentState = PlayerStates.Standing;
         this.position.y += depth.y;
         this.velocity.y = 0;
       }
