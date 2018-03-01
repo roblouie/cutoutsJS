@@ -6,10 +6,17 @@ import {AnimationState} from '../core/animation-state';
 import {Rectangle} from '../core/geometry/rectangle';
 import {gameEngine} from '../scripts/game-engine';
 
+enum PlayerStates {
+  Standing,
+  Moving,
+  Ducking,
+  Dying,
+  Jumping
+}
+
 export class Player extends AnimatedSprite {
   private static SpriteSheet = require('./player.png');
-  private readonly groundDrag: number = 0.68;
-  private readonly airDrag: number = 0.68;
+  private readonly drag: number = 0.68;
   private readonly jumpLaunchVelocity: number = -1100;
   private readonly maxJumpTime: number = 0.4;
   private readonly jumpControlPower: number = 2.0;
@@ -23,22 +30,14 @@ export class Player extends AnimatedSprite {
   worldWidth: number;
   worldHeight: number;
   isHorizontalFlipped: boolean;
-  private wantsToJump: boolean;
-  private isJumping: boolean;
-  private isJumpingAnimation: boolean; // NOTE: Required due to how jumping works. State management should be refactored.
-  private isStanding: boolean;
   isDying: boolean;
   private _isFalling: boolean;
-  private isDucking: boolean;
-  private isGrabbing: boolean;
   private isRunning: boolean;
-  private isOnGround: boolean;
-  private isBouncingOffEnemy: boolean;
   private isInvincible: boolean;
+  private isAbleToJump: boolean = true;
   private velocity: Point = new Point();
-  private jumpTime: number;
+  private jumpTime: number = 0;
   private movement: Point = new Point(0, 0);
-  private previousBottom: number;
   private moveSpeed: number;
 
   private collisionOffsetTop: number = 15;
@@ -50,7 +49,9 @@ export class Player extends AnimatedSprite {
   private invincibilityTimeLimit: number = 2000;
   private invincibilityTime: number;
 
-  private states = {
+  private currentState: PlayerStates = PlayerStates.Standing;
+
+  private animationStates = {
     moving: new AnimationState(1, 0, 3, 1),
     standing: new AnimationState(0, 0, 0, 0),
     ducking: new AnimationState(4, 1, 4, 1),
@@ -75,7 +76,7 @@ export class Player extends AnimatedSprite {
     this.speed = 0.5;
     this.analogSpeed = 20;
 
-    this.setAnimationState(this.states.moving);
+    this.setAnimationState(this.animationStates.standing);
   }
 
   updateFromUserInput() {
@@ -83,28 +84,106 @@ export class Player extends AnimatedSprite {
       return;
     }
 
-    this.movement.x = controls.controller.leftStick.x;
+    switch (this.currentState) {
+      case PlayerStates.Standing:
+        this.movement.x = controls.controller.leftStick.x;
+        if (controls.keyboard.left || controls.controller.dpad.left) {
+          this.movement.x = -1.0;
+        }
 
-    if (controls.keyboard.left || controls.controller.dpad.left) {
-      this.movement.x = -1.0;
-    }
+        if (controls.keyboard.right || controls.controller.dpad.right) {
+          this.movement.x = 1.0;
+        }
 
-    if (controls.keyboard.right || controls.controller.dpad.right) {
-      this.movement.x = 1.0;
-    }
+        if (Math.abs(this.movement.x) > 0) {
+          this.currentState = PlayerStates.Moving;
+          this.setAnimationState(this.animationStates.moving);
+        }
 
-    this.isDucking = controls.keyboard.down || controls.controller.dpad.down || controls.controller.leftStick.y > 0.2;
-    this.wantsToJump = controls.keyboard.space || controls.controller.buttons.bottom;
+        if (controls.keyboard.down || controls.controller.dpad.down || controls.controller.leftStick.y > 0.2) {
+          this.currentState = PlayerStates.Ducking;
+          this.setAnimationState(this.animationStates.ducking);
+        }
 
-    if (controls.keyboard.leftShift
-      || controls.controller.buttons.left
-      || controls.controller.buttons.rightBumper
-      || controls.controller.triggers.right > 0) {
-      this.isGrabbing = true;
-      this.isRunning = true;
-    } else {
-      this.isGrabbing = false;
-      this.isRunning = false;
+        if (controls.controller.buttons.bottom) {
+          this.currentState = PlayerStates.Jumping;
+          this.setAnimationState(this.animationStates.jumping);
+        } else {
+          this.isAbleToJump = true;
+        }
+        break;
+      case PlayerStates.Moving:
+        this.movement.x = controls.controller.leftStick.x;
+        if (controls.keyboard.left || controls.controller.dpad.left) {
+          this.movement.x = -1.0;
+        }
+
+        if (controls.keyboard.right || controls.controller.dpad.right) {
+          this.movement.x = 1.0;
+        }
+
+        if (Math.abs(this.movement.x) === 0) {
+          this.currentState = PlayerStates.Standing;
+          this.setAnimationState(this.animationStates.standing);
+          break;
+        }
+
+        this.isRunning = controls.keyboard.leftShift
+          || controls.controller.buttons.left
+          || controls.controller.buttons.rightBumper
+          || controls.controller.triggers.right > 0;
+
+        if (Math.abs(this.velocity.x) > 800) {
+          this.millisecondsPerFrame = 30;
+        } else if (Math.abs(this.velocity.x) > 400) {
+          this.millisecondsPerFrame = 40;
+        } else {
+          this.millisecondsPerFrame = 80;
+        }
+
+        if (controls.controller.buttons.bottom) {
+          this.currentState = PlayerStates.Jumping;
+          this.setAnimationState(this.animationStates.jumping);
+        } else {
+          this.isAbleToJump = true;
+        }
+        break;
+      case PlayerStates.Jumping:
+        if (controls.controller.buttons.bottom) {
+          this.jump();
+        }
+
+        this.movement.x = controls.controller.leftStick.x;
+        if (controls.keyboard.left || controls.controller.dpad.left) {
+          this.movement.x = -1.0;
+        }
+
+        if (controls.keyboard.right || controls.controller.dpad.right) {
+          this.movement.x = 1.0;
+        }
+
+        if(!controls.controller.buttons.bottom) {
+          this.jumpTime = 0;
+          this.isAbleToJump = true;
+        }
+
+        this.isRunning = controls.keyboard.leftShift
+          || controls.controller.buttons.left
+          || controls.controller.buttons.rightBumper
+          || controls.controller.triggers.right > 0;
+        break;
+      case PlayerStates.Ducking:
+        if (!controls.keyboard.down && !controls.controller.dpad.down && controls.controller.leftStick.y < 0.2) {
+          this.currentState = PlayerStates.Standing;
+          this.setAnimationState(this.animationStates.standing);
+        }
+
+        if (controls.keyboard.down || controls.controller.buttons.bottom) {
+          this.jump();
+          this.currentState = PlayerStates.Jumping;
+          this.setAnimationState(this.animationStates.jumping);
+        }
+        break;
     }
   }
 
@@ -121,38 +200,12 @@ export class Player extends AnimatedSprite {
     const uncappedVelocityY = this.velocity.y + this.gravity * millisecondsSinceLast;
     this.velocity.x = MathHelper.Clamp(uncappedVelocityX, this.maxVelocity.x * -1, this.maxVelocity.x);
     this.velocity.y = MathHelper.Clamp(uncappedVelocityY, this.maxVelocity.y * -1, this.maxVelocity.y);
-
-    if (Math.abs(this.velocity.x) > 800) {
-      this.millisecondsPerFrame = 30;
-    } else if (Math.abs(this.velocity.x) > 400) {
-      this.millisecondsPerFrame = 40;
-    } else {
-      this.millisecondsPerFrame = 80;
-    }
-
-    this.jump(millisecondsSinceLast);
-
-    if (this.isOnGround) {
-      this.velocity.x *= this.groundDrag;
-    } else {
-      this.velocity.x *= this.airDrag;
-    }
+    this.velocity.x *= this.drag;
 
     this.isHorizontalFlipped = this.velocity.x >= 0;
     this._isFalling = this.velocity.y > 0;
-
-    if (Math.abs(this.movement.x) < 0.1) {
-      this.isStanding = true;
-    } else {
-      this.isStanding = false;
-      this.isDucking = false;
-    }
-
     this.position.x += this.velocity.x * millisecondsSinceLast;
     this.position.y += this.velocity.y * millisecondsSinceLast;
-
-    // Player is considered "not on the ground" until collision detection proves otherwise
-    this.isOnGround = false;
 
     currentCollisionBoxes.forEach(collisionItem => {
       const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
@@ -168,8 +221,6 @@ export class Player extends AnimatedSprite {
       const isCollidingFromBelow = !isCollidingFromAbove;
 
       if (isVerticalCollision && isCollidingFromAbove) { // standing on the box
-        this.isOnGround = true;
-        this.isJumpingAnimation = false;
         this.position.y += depth.y;
         this.velocity.y = 0;
       }
@@ -182,13 +233,14 @@ export class Player extends AnimatedSprite {
       if (isHorizontalCollision && !collisionItem.passable) { // walking into a wall
         this.position.x += depth.x;
         this.velocity.x = 0;
-        this.isStanding = true;
       }
     });
   }
 
   bounceOffEnemy() {
-    this.isBouncingOffEnemy = true;
+    this.isAbleToJump = true;
+    this.jumpTime = 0;
+    this.jump();
   }
 
   takeDamage() {
@@ -219,49 +271,12 @@ export class Player extends AnimatedSprite {
     return this._lives;
   }
 
-  private jump(millisecondsSinceLast) {
-    if (this.wantsToJump || this.isBouncingOffEnemy) {
-      if ((!this.isJumping && this.isOnGround) || this.jumpTime > 0 || this.isBouncingOffEnemy) { // TODO: Clean up this logic
-        this.jumpTime += millisecondsSinceLast;
-        this.isJumping = true;
-        this.isJumpingAnimation = true;
-      }
+  private jump() {
+    this.jumpTime += gameEngine.millisecondsSinceLast / 1000;
 
-      if (0 < this.jumpTime && this.jumpTime <= this.maxJumpTime) {
-        this.velocity.y = this.jumpLaunchVelocity * (1 - Math.pow(this.jumpTime / this.maxJumpTime, this.jumpControlPower));
-      } else {
-        this.jumpTime = 0;
-      }
-
-      this.isBouncingOffEnemy = false;
-    } else {
-      this.jumpTime = 0;
+    if (this.jumpTime <= this.maxJumpTime && this.isAbleToJump) {
+      this.velocity.y = this.jumpLaunchVelocity * (1 - Math.pow(this.jumpTime / this.maxJumpTime, this.jumpControlPower));
     }
-
-    // NOTE: This stops the user from being able to bounce repeatedly by holding the jump button.
-    // Since isJumping will remain true jump won't trigger again until the user lets go of the button.
-    // This works but isn't very intuitive.
-    this.isJumping = this.wantsToJump;
-  }
-
-  updateAnimationState() {
-    let newState: AnimationState;
-
-    if (this.isStanding) {
-      newState = this.states.standing;
-    } else {
-      newState = this.states.moving;
-    }
-
-    if (this.isDucking) {
-      newState = this.states.ducking;
-    }
-
-    if (this.isJumpingAnimation) {
-      newState = this.states.jumping;
-    }
-
-    this.setAnimationState(newState);
   }
 
   private updateInvincibility() {
@@ -279,7 +294,6 @@ export class Player extends AnimatedSprite {
     this.updateFromUserInput();
     this.updateInvincibility();
     this.physics(millisecondsSinceLast / 1000, currentSectors);
-    this.updateAnimationState();
 
     super.draw()
   }
