@@ -1,8 +1,8 @@
 import controls from "../core/controls";
 
 export class GameControls {
-  static LeftStick = {
-    X: controls.controller.leftStick.x,
+  static get LeftStick() {
+    return { X: controls.controller.leftStick.x }
   };
 
   static get Left() {
@@ -14,7 +14,7 @@ export class GameControls {
   }
 
   static get Duck() {
-    return controls.controller.dpad.down || controls.keyboard.down || controls.controller.leftStick.y < 0;
+    return controls.controller.dpad.down || controls.keyboard.down || controls.controller.leftStick.y > 0.2;
   }
 
   static get Jump() {

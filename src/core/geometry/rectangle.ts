@@ -1,4 +1,5 @@
 import { Point } from './point';
+import {DetailedCollisionState} from './detailed-collision-state';
 
 export class Rectangle {
   top: number;
@@ -61,5 +62,26 @@ export class Rectangle {
     const depthX = distanceX > 0 ? minDistanceX - distanceX : -minDistanceX - distanceX;
     const depthY = distanceY > 0 ? minDistanceY - distanceY : -minDistanceY - distanceY;
     return new Point(depthX, depthY);
+  }
+
+  getDetailedCollisionState(otherRectangle: Rectangle): DetailedCollisionState {
+    const depth = this.getIntersectionDepth(otherRectangle);
+    const collisionState = new DetailedCollisionState();
+
+    if (depth.isZero()) { // Stop and return if we aren't colliding with the box
+      collisionState.isColliding = false;
+    } else {
+      const isVerticalCollision = Math.abs(depth.y) < Math.abs(depth.x);
+      const isHorizontalCollision = !isVerticalCollision;
+
+      collisionState.isColliding = true;
+      collisionState.collisionDepth = depth;
+      collisionState.isMyBottomColliding = isVerticalCollision && this.bottom <= otherRectangle.bottom;
+      collisionState.isMyTopColliding = isVerticalCollision && this.bottom > otherRectangle.bottom;
+      collisionState.isMyLeftColliding = isHorizontalCollision && this.left <= otherRectangle.left;
+      collisionState.isMyRightColliding = isHorizontalCollision && this.left > otherRectangle.left;
+    }
+
+    return collisionState;
   }
 }
