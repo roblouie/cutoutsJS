@@ -68,18 +68,14 @@ export class Rectangle {
     const depth = this.getIntersectionDepth(otherRectangle);
     const collisionState = new DetailedCollisionState();
 
-    if (depth.isZero()) { // Stop and return if we aren't colliding with the box
-      collisionState.isColliding = false;
-    } else {
+    if (!depth.isZero()) {
       const isVerticalCollision = Math.abs(depth.y) < Math.abs(depth.x);
       const isHorizontalCollision = !isVerticalCollision;
 
-      collisionState.isColliding = true;
       collisionState.collisionDepth = depth;
       collisionState.isMyBottomColliding = isVerticalCollision && this.bottom <= otherRectangle.bottom;
       collisionState.isMyTopColliding = isVerticalCollision && this.bottom > otherRectangle.bottom;
-      collisionState.isMyLeftColliding = isHorizontalCollision && this.left <= otherRectangle.left;
-      collisionState.isMyRightColliding = isHorizontalCollision && this.left > otherRectangle.left;
+      collisionState.isHorizontalCollision = isHorizontalCollision;
     }
 
     return collisionState;

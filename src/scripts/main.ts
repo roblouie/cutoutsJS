@@ -7,6 +7,7 @@ import {gameEngine} from './game-engine';
 import {Point} from '../core/geometry/point';
 import {Coin} from '../levels/coin';
 import {Enemy} from '../enemies/enemy';
+import {CollisionResolver} from './collision-resolver';
 
 gameEngine.setCanvas('gameCanvas');
 
@@ -26,37 +27,23 @@ const Game = { play: null, togglePause: null, controls: null };
   // setup an object that represents the room
   const map = new Map();
 
+  const collisionResolver = new CollisionResolver();
+
   var hud = new Hud();
 
   // setup player
-  var player = new Player(50, 50, map.width, map.height);
+  var player = new Player(50, 50);
 
   // Game update function
   var update = function (step) {
-    controls.queryControllers();
-    if (map.currentSectors.length > 0) {
-      map.currentSectors[0].coins.forEach((coin: Coin, index: number, coinArray: Coin[]) => {
-        if (player.collisionBox.isIntersecting(coin.collisionBox)) {
-          coinArray.splice(index, 1);
-          player.addCoin();
-        }
-      });
-
-      map.currentSectors[0].enemies.forEach((enemy: Enemy, index, enemyArray) => {
-        const isPlayerEnemyCollision = player.collisionBox.isIntersecting(enemy.collisionBox) && !player.isDying;
-        const isPlayerJumpingOnHead = player.isFalling && player.collisionBox.bottom < enemy.collisionBox.center.y;
-        const isPlayerInKillZone = player.collisionBox.isIntersecting(enemy.killBox);
-        if (isPlayerEnemyCollision && isPlayerJumpingOnHead) {
-          enemyArray.splice(index, 1);
-          player.bounceOffEnemy();
-          player.addCoin();
-        }
-
-        if (isPlayerEnemyCollision && !isPlayerJumpingOnHead && isPlayerInKillZone) {
-          player.takeDamage();
-        }
-      });
+    if (step > 17) { //TODO: Remove, this is
+      return;
     }
+
+    controls.queryControllers();
+    player.update(gameEngine.millisecondsSinceLast, map.getCurrentCollisionBoxes());
+    collisionResolver.checkCollision(map.currentSectors, player);
+    // collisionResolver.handlePlayerLevelGeometryCollision(player, map.getCurrentCollisionBoxes());
   };
 
 
@@ -69,7 +56,7 @@ const Game = { play: null, togglePause: null, controls: null };
     context.clearRect(0, 0, gameEngine.canvas.width, gameEngine.canvas.height);
     // redraw all objects
     map.draw(gameEngine.previousXPosition);
-    player.drawPlayer(context, step, map.getCurrentCollisionBoxes());
+    player.draw();
     gameEngine.scrollCanvas(player.position.x, map.width);
     hud.draw(player.coins, player.lives);
   };

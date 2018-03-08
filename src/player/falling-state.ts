@@ -17,10 +17,15 @@ export class FallingState implements State {
   }
 
   update() {
-    console.log(this.player.isStandingOnFloor);
-
-    if (this.player.isStandingOnFloor) {
+    if (this.player.collisionState.isMyBottomColliding) {
       this.stateMachine.change(Player.States.Ground);
+      this.player.position.y += this.player.collisionState.collisionDepth.y;
+      this.player.velocity.y = 0;
+    }
+
+    if (this.player.collisionState.isHorizontalCollision) {
+      this.player.position.x += this.player.collisionState.collisionDepth.x;
+      this.player.velocity.x = 0;
     }
 
     if (Math.abs(this.player.velocity.x) < 10) {

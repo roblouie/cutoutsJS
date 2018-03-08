@@ -1,5 +1,5 @@
 class GameEngine {
-  private readonly _isDebugMode = false;
+  private readonly _isDebugMode = true;
     canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
     previousXPosition: number = 0;

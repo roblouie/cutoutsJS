@@ -16,7 +16,7 @@ export class DuckingState implements State{
   enter(...args: any[]) {
     console.log('Entering Ducking State');
     this.player.setAnimationState(this.player.animationStates.ducking);
-    this.isAbleToJump = !GameControls.Jump
+    this.isAbleToJump = !GameControls.Jump;
   }
 
   handleInput() {
@@ -30,6 +30,10 @@ export class DuckingState implements State{
   }
 
   update() {
+    if (this.player.collisionState.isVerticalCollision) {
+      this.player.velocity.y = 0;
+      this.player.position.y += this.player.collisionState.collisionDepth.y;
+    }
   }
 
   exit() {

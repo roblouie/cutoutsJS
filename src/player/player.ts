@@ -10,6 +10,7 @@ import {JumpingState} from './jumping-state';
 import {StateMachine} from '../core/state-machine/state-machine';
 import {DuckingState} from './ducking-state';
 import {DetailedCollisionState} from '../core/geometry/detailed-collision-state';
+import {CollisionResolver} from '../scripts/collision-resolver';
 
 export class Player extends AnimatedSprite {
   private static SpriteSheet = require('./player.png');
@@ -22,21 +23,15 @@ export class Player extends AnimatedSprite {
 
   speed: number;
   analogSpeed: number;
-  worldWidth: number;
-  worldHeight: number;
   isDying: boolean;
   private _isFalling: boolean;
   isRunning: boolean;
   private isInvincible: boolean;
   velocity: Point = new Point();
-  test = 0;
+  collisionState = new DetailedCollisionState();
 
   movement: Point = new Point(0, 0);
   private moveSpeed: number;
-
-  isStandingOnFloor: boolean;
-  isHittingHeadOnCeiling: boolean;
-  isWalkingIntoWall: boolean;
 
   private collisionOffsetTop: number = 15;
   private collisionOffsetX: number = 30;
@@ -46,6 +41,7 @@ export class Player extends AnimatedSprite {
   private _coins: number = 0;
   private invincibilityTimeLimit: number = 2000;
   private invincibilityTime: number;
+  private collisionResolver = new CollisionResolver();
 
   static States = {
     Ground: 'Ground',
@@ -64,16 +60,11 @@ export class Player extends AnimatedSprite {
     deathState: new AnimationState(6, 1, 6, 1)
   };
 
-  constructor(x, y, worldWidth, worldHeight) {
+  constructor(x, y) {
     super(102, 150, 9, 2, Player.SpriteSheet);
 
-    this.worldWidth = worldWidth;
-    this.worldHeight = worldHeight;
     this.millisecondsPerFrame = 50;
 
-    // (x, y) = center of object
-    // ATTENTION:
-    // it represents the player position on the world(room), not the canvas position
     this.position.x = x;
     this.position.y = y;
 
@@ -90,7 +81,8 @@ export class Player extends AnimatedSprite {
     this.setAnimationState(this.animationStates.standing);
   }
 
-  physics(millisecondsSinceLast, currentCollisionBoxes) {
+  physics() {
+    const millisecondsSinceLast = gameEngine.millisecondsSinceLast / 1000;
     const playerCenter: number = this.position.x + this.frameSize.width / 2;
 
     if (this.isRunning) {
@@ -117,35 +109,6 @@ export class Player extends AnimatedSprite {
     this._isFalling = this.velocity.y > 0;
     this.position.x += this.velocity.x * millisecondsSinceLast;
     this.position.y += this.velocity.y * millisecondsSinceLast;
-
-    this.isStandingOnFloor = false;
-    this.isHittingHeadOnCeiling = false;
-    this.isWalkingIntoWall = false;
-
-    // Make game engine do the collision check, if it finds a collision
-
-    currentCollisionBoxes.forEach(collisionItem => {
-      const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
-      const collisionState = this.collisionBox.getDetailedCollisionState(collisionBox);
-
-      if (!collisionState.isColliding) {
-        return;
-      }
-
-      this.isStandingOnFloor = collisionState.isMyBottomColliding;
-      this.isHittingHeadOnCeiling = collisionState.isMyTopColliding && !collisionItem.passable;
-      this.isWalkingIntoWall = collisionState.isHorizontalCollision && !collisionItem.passable;
-
-      if (this.isStandingOnFloor || this.isHittingHeadOnCeiling) {
-        this.position.y += collisionState.collisionDepth.y;
-        this.velocity.y = 0;
-      }
-
-      if (this.isWalkingIntoWall) {
-        this.position.x += collisionState.collisionDepth.x;
-        this.velocity.x = 0;
-      }
-    });
   }
 
   bounceOffEnemy() {
@@ -192,16 +155,11 @@ export class Player extends AnimatedSprite {
     }
   }
 
-  getInput() {
+  update(millisecondsSinceLast, currentSectors) {
     this.stateMachine.handleInput();
-  }
-
-  drawPlayer(context, millisecondsSinceLast, currentSectors) {
-    this.getInput();
-    this.updateInvincibility();
-    this.physics(millisecondsSinceLast / 1000, currentSectors);
+    this.physics();
+    this.collisionResolver.handlePlayerLevelGeometryCollision(this, currentSectors);
     this.stateMachine.update();
-    super.draw()
   }
 
   get isFalling() {

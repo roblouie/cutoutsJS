@@ -46,8 +46,19 @@ export class JumpingState implements State {
   }
 
   update() {
-    if (this.player.isStandingOnFloor) {
+    if (this.player.velocity.y > 0 && this.player.collisionState.isMyBottomColliding) {
       this.stateMachine.change(Player.States.Ground);
+      this.player.position.y += this.player.collisionState.collisionDepth.y;
+      this.player.velocity.y = 0;
+    }
+    if (this.player.velocity.y <= 0 && this.player.collisionState.isMyTopColliding) {
+      this.player.position.y += this.player.collisionState.collisionDepth.y;
+      this.player.velocity.y = 0;
+    }
+
+    if (this.player.collisionState.isHorizontalCollision) {
+      this.player.position.x += this.player.collisionState.collisionDepth.x;
+      this.player.velocity.x = 0;
     }
   }
 
