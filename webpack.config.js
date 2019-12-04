@@ -1,13 +1,17 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/scripts/main.ts',
+  entry: ['./src/scripts/main.ts', './src/index.html'],
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist'
   },
   module: {
     rules: [
+      {
+        test: /\.html/,
+        loader: 'file-loader?name=[name].[ext]'
+      },
       {
         test: /\.ts$/,
         use: 'ts-loader',
@@ -22,11 +26,21 @@ module.exports = {
             outputPath: 'assets/images/'
           }
         }
+      },
+      {
+        test: /\.wav$/,
+        use:  {
+          loader: 'file-loader',
+          options: {
+            name: "[name].[hash:20].[ext]",
+            outputPath: 'assets/audio/'
+          }
+        }
       }
     ]
   },
   resolve: {
-    extensions: ['.ts', '.js', '.png']
+    extensions: ['.ts', '.js', '.png', '.wav']
   },
   output: {
     filename: 'bundle.js',

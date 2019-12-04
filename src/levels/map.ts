@@ -127,7 +127,7 @@ export class Map {
 
   getCurrentCollisionBoxes() {
     return this.currentSectors.reduce((previous, current) => {
-      return [...previous, ...current.collisionBoxes.Item];
+      return previous.concat(current.collisionBoxes.Item);
     }, []);
   }
 

@@ -11,9 +11,11 @@ import {StateMachine} from '../core/state-machine/state-machine';
 import {DuckingState} from './ducking-state';
 import {DetailedCollisionState} from '../core/geometry/detailed-collision-state';
 import {CollisionResolver} from '../scripts/collision-resolver';
+import {Sound, soundService} from '../core/sound';
 
 export class Player extends AnimatedSprite {
   private static SpriteSheet = require('./player.png');
+  private static CoinSound = require('./collect-coin.wav');
   private readonly drag: number = 0.68;
 
   private readonly gravity: number = 4500;
@@ -42,6 +44,8 @@ export class Player extends AnimatedSprite {
   private invincibilityTimeLimit: number = 2000;
   private invincibilityTime: number;
   private collisionResolver = new CollisionResolver();
+  private coinSound: Sound;
+  private jumpSound: Sound;
 
   static States = {
     Ground: 'Ground',
@@ -79,6 +83,9 @@ export class Player extends AnimatedSprite {
 
     this.stateMachine.change(Player.States.Falling);
     this.setAnimationState(this.animationStates.standing);
+
+    this.coinSound = new Sound(Player.CoinSound);
+    soundService.registerSound(this.coinSound);
   }
 
   physics() {
@@ -129,6 +136,7 @@ export class Player extends AnimatedSprite {
 
   addCoin() {
     this._coins++;
+    this.coinSound.play();
     if (this._coins >= 100) {
       this._lives++;
       this._coins = 0;

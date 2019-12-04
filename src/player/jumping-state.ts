@@ -3,6 +3,7 @@ import {GameControls} from '../scripts/game-controls';
 import {State} from '../core/state-machine/state';
 import {StateMachine} from '../core/state-machine/state-machine';
 import {gameEngine} from '../scripts/game-engine';
+import {Sound, soundService} from '../core/sound';
 
 export class JumpingState implements State {
   player: Player;
@@ -12,16 +13,22 @@ export class JumpingState implements State {
   private readonly jumpLaunchVelocity: number = -1100;
   private readonly maxJumpTime: number = 0.4;
   private readonly jumpControlPower: number = 2.0;
+  private static JumpSound = require('./hop.wav');
+  private jumpSound: Sound;
 
   constructor(player: Player) {
     this.player = player;
     this.stateMachine = player.stateMachine;
+    this.jumpSound = new Sound(JumpingState.JumpSound);
+    soundService.registerSound(this.jumpSound);
   }
 
   enter(...args: any[]) {
     console.log('Entered Jumping State');
     this.player.setAnimationState(this.player.animationStates.jumping);
     this.jump();
+
+    this.jumpSound.play();
   }
 
   handleInput() {

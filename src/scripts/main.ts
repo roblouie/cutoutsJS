@@ -4,10 +4,8 @@ import {Player} from '../player/player';
 import {Hud} from '../hud/hud';
 import controls from '../core/controls';
 import {gameEngine} from './game-engine';
-import {Point} from '../core/geometry/point';
-import {Coin} from '../levels/coin';
-import {Enemy} from '../enemies/enemy';
 import {CollisionResolver} from './collision-resolver';
+import {soundService} from '../core/sound';
 
 gameEngine.setCanvas('gameCanvas');
 
@@ -101,5 +99,9 @@ const Game = { play: null, togglePause: null, controls: null };
 
 window.onload = function () {
   Game.play();
-}
+  //@ts-ignore
+  document.getElementById('mute').onclick = () => {
+    soundService.initializeAudioCtx();
+  };
+};
 
