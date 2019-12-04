@@ -14,7 +14,7 @@ export class GameControls {
   }
 
   static get Duck() {
-    return controls.controller.dpad.down || controls.keyboard.down || controls.controller.leftStick.y > 0.2;
+    return controls.controller.dpad.down || controls.keyboard.down || controls.controller.leftStick.y > 0.7;
   }
 
   static get Jump() {

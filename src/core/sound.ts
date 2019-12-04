@@ -7,10 +7,8 @@ export class Sound {
   }
 
   async play() {
-    //@ts-ignore
     const trackSource = soundService.audioCtx.createBufferSource();
     trackSource.buffer = this.track;
-    //@ts-ignore
     trackSource.connect(soundService.audioCtx.destination);
     trackSource.start();
   }

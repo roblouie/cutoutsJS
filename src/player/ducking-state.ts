@@ -34,6 +34,8 @@ export class DuckingState implements State{
       this.player.velocity.y = 0;
       this.player.position.y += this.player.collisionState.collisionDepth.y;
     }
+
+    this.player.movement.x = 0;
   }
 
   exit() {
