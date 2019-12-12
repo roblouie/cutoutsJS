@@ -3,7 +3,6 @@ import {Enemy} from "./enemy";
 import {AnimationState} from '../core/animation-state';
 import {gameEngine} from '../scripts/game-engine';
 import {MathHelper} from '../core/math-helper';
-import {Rectangle} from '../core/geometry/rectangle';
 
 export class Rabbit extends Enemy {
   private static AnimationData = {
@@ -29,13 +28,12 @@ export class Rabbit extends Enemy {
   private movement: number = -1;
   private jumpTime: number;
 
-  private enemyCenter;
   private jumpingState = new AnimationState(0, 0, 4, 0);
   private midairState = new AnimationState(4, 0, 4, 0);
 
   constructor(x, y) {
     super(x, y, Rabbit.AnimationData.frameWidth, Rabbit.AnimationData.frameHeight,
-      Rabbit.AnimationData.columns, Rabbit.AnimationData.rows, Rabbit.AnimationData.imageSource);
+      Rabbit.AnimationData.columns, Rabbit.AnimationData.rows, 'Rabbit', Rabbit.AnimationData.imageSource);
 
     this.millisecondsPerFrame = 40;
     this.collisionOffsetLeft = 10;
@@ -79,8 +77,7 @@ export class Rabbit extends Enemy {
 
     this.isOnGround = false;
 
-    currentCollisionBoxes.forEach(collisionItem => {
-      const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
+    currentCollisionBoxes.forEach(collisionBox => {
       const depth = this.collisionBox.getIntersectionDepth(collisionBox);
 
       if (depth.isZero()) { // Stop if we aren't colliding with the current box
@@ -99,12 +96,12 @@ export class Rabbit extends Enemy {
         this.velocity.y = 0;
       }
 
-      if (isVerticalCollision && isCollidingFromBelow && !collisionItem.passable) { // hitting head on the box
+      if (isVerticalCollision && isCollidingFromBelow && !collisionBox.passable) { // hitting head on the box
         this.position.y += depth.y;
         this.velocity.y = 0;
       }
 
-      if (isHorizontalCollision && !collisionItem.passable) { // walking into a wall
+      if (isHorizontalCollision && !collisionBox.passable) { // walking into a wall
         this.position.x += depth.x;
         this.movement *= -1;
       }

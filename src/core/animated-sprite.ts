@@ -53,7 +53,7 @@ export abstract class AnimatedSprite {
     }
   }
 
-  protected setAnimationState(animationState: AnimationState) {
+  setAnimationState(animationState: AnimationState) {
     if (animationState !== this.currentAnimationState) {
       this.currentAnimationState = animationState;
       this.currentFrame.x = animationState.startingFrame.x;

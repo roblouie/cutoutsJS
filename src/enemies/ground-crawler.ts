@@ -2,7 +2,6 @@ import { Point } from "../core/geometry/point";
 import {Enemy} from "./enemy";
 import {gameEngine} from '../scripts/game-engine';
 import {MathHelper} from '../core/math-helper';
-import {Rectangle} from '../core/geometry/rectangle';
 
 export class GroundCrawler extends Enemy {
   private static AnimationData = {
@@ -19,14 +18,13 @@ export class GroundCrawler extends Enemy {
   private readonly gravity = 500;
   private readonly moveSpeed = 1000;
   private movement = -1;
-  private previousBottom;
 
   velocity = new Point();
   maxVelocity = new Point(1000, 500);
 
   constructor(x, y) {
     super(x, y, GroundCrawler.AnimationData.frameWidth, GroundCrawler.AnimationData.frameHeight,
-      GroundCrawler.AnimationData.columns, GroundCrawler.AnimationData.rows, GroundCrawler.AnimationData.imageSource);
+      GroundCrawler.AnimationData.columns, GroundCrawler.AnimationData.rows, 'Ground Crawler', GroundCrawler.AnimationData.imageSource);
 
     this.millisecondsPerFrame = 250;
     this.collisionOffsetLeft = 10;
@@ -46,7 +44,6 @@ export class GroundCrawler extends Enemy {
 
   physicsAndCollision(currentCollisionBoxes) {
     const elapsed = gameEngine.millisecondsSinceLast / 1000;
-    this.currentScreen = gameEngine.canvas.width;
     this.velocity.x = MathHelper.Clamp(this.velocity.x + this.movement * this.moveSpeed * elapsed, -this.maxVelocity.x, this.maxVelocity.x);
     this.velocity.y = MathHelper.Clamp(this.velocity.y + this.gravity * elapsed, -this.maxVelocity.y, this.maxVelocity.y);
 
@@ -62,9 +59,7 @@ export class GroundCrawler extends Enemy {
 
     this.isOnGround = false;
 
-    currentCollisionBoxes.forEach(collisionItem => {
-      const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
-
+    currentCollisionBoxes.forEach(collisionBox => {
       const depth: Point = this.collisionBox.getIntersectionDepth(collisionBox);
 
       if (depth.isZero()) { // ignore collision boxes we aren't colliding with
@@ -81,11 +76,10 @@ export class GroundCrawler extends Enemy {
         this.velocity.y = 0;
       }
 
-      if (isHorizontalCollision && !collisionItem.passable) { // walking into a wall
+      if (isHorizontalCollision && !collisionBox.passable) { // walking into a wall
         this.position.x += depth.x;
         this.movement *= -1;
       }
     });
   }
-
 }
