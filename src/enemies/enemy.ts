@@ -5,7 +5,8 @@ import {Rectangle} from '../core/geometry/rectangle';
 
 export abstract class Enemy extends AnimatedSprite {
   position: Point;
-  currentScreen;
+  type: string;
+  ownedScreen;
   collisionOffsetLeft;
   collisionOffsetRight;
   collisionOffsetTop;
@@ -16,10 +17,11 @@ export abstract class Enemy extends AnimatedSprite {
   killOffsetTop;
   killOffsetBottom;
 
-  constructor(posX, posY, frameWidth, frameHeight, frameCountX, frameCountY, spriteSheetSrc?: string) {
+  constructor(posX, posY, frameWidth, frameHeight, frameCountX, frameCountY, type: string, spriteSheetSrc?: string) {
     super(frameWidth, frameHeight, frameCountX, frameCountY, spriteSheetSrc);
     this.position = new Point(posX, posY);
-    this.currentScreen = this.position.y / gameEngine.canvas.width;
+    this.type = type;
+    this.ownedScreen = Math.floor(this.position.x / gameEngine.canvas.width);
   }
 
   get collisionBox() {
@@ -34,6 +36,10 @@ export abstract class Enemy extends AnimatedSprite {
       this.position.y + this.killOffsetTop,
       this.frameSize.width - (this.killOffsetRight * 2),
       this.frameSize.height - this.killOffsetBottom);
+  }
+
+  get centerScreenIndex() {
+    return Math.floor(this.collisionBox.center.x / gameEngine.canvas.width);
   }
 
   update(currentSectors) {

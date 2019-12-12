@@ -11,7 +11,10 @@ export class CollisionResolver {
   checkCollision(currentSectors: any, player: Player) {
     if (currentSectors.length > 0) {
       this.handlePlayerCoinCollision(player, currentSectors[0].coins);
-      this.handlePlayerEnemyCollision(player, currentSectors[0].enemies);
+
+      currentSectors.forEach(sector => {
+        this.handlePlayerEnemyCollision(player, sector.enemies);
+      });
     }
   }
 
@@ -50,9 +53,7 @@ export class CollisionResolver {
     });
   }
 
-  private getEnvironmentCollisionState(player: Player, levelPiece) {
-    const collisionBox = new Rectangle(levelPiece.collisionBox.x, levelPiece.collisionBox.y, levelPiece.collisionBox.width, levelPiece.collisionBox.height);
-
+  private getEnvironmentCollisionState(player: Player, collisionBox) {
     const depth = player.collisionBox.getIntersectionDepth(collisionBox);
     const collisionState = new DetailedCollisionState();
 
@@ -62,8 +63,8 @@ export class CollisionResolver {
 
       collisionState.collisionDepth = depth;
       collisionState.isMyBottomColliding = isVerticalCollision && player.collisionBox.bottom <= collisionBox.bottom;
-      collisionState.isMyTopColliding = isVerticalCollision && player.collisionBox.bottom > collisionBox.bottom && !levelPiece.passable;
-      collisionState.isHorizontalCollision = isHorizontalCollision && !levelPiece.passable;
+      collisionState.isMyTopColliding = isVerticalCollision && player.collisionBox.bottom > collisionBox.bottom && !collisionBox.passable;
+      collisionState.isHorizontalCollision = isHorizontalCollision && !collisionBox.passable;
     }
 
     return collisionState;

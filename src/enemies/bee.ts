@@ -2,7 +2,6 @@ import { Point } from "../core/geometry/point";
 import {Enemy} from "./enemy";
 import {gameEngine} from '../scripts/game-engine';
 import {MathHelper} from '../core/math-helper';
-import {Rectangle} from '../core/geometry/rectangle';
 
 export class Bee extends Enemy {
   private static AnimationData = {
@@ -14,18 +13,12 @@ export class Bee extends Enemy {
   };
   private velocity = new Point();
   private maxVelocity = new Point(1000, 300);
-
   private movement = 1;
-
-
-  private enemyCenter;
-
-
   private moveSpeed = 600;
 
   constructor(x, y) {
     super(x, y, Bee.AnimationData.frameWidth, Bee.AnimationData.frameHeight,
-      Bee.AnimationData.columns, Bee.AnimationData.rows, Bee.AnimationData.imageSource);
+      Bee.AnimationData.columns, Bee.AnimationData.rows, 'Bee', Bee.AnimationData.imageSource);
 
     this.millisecondsPerFrame = 25;
     this.collisionOffsetLeft = 10;
@@ -55,8 +48,7 @@ export class Bee extends Enemy {
       this.movement = -1;
     }
 
-    currentCollisionBoxes.forEach(collisionItem => {
-      const collisionBox = new Rectangle(collisionItem.collisionBox.x, collisionItem.collisionBox.y, collisionItem.collisionBox.width, collisionItem.collisionBox.height);
+    currentCollisionBoxes.forEach(collisionBox => {
       const depth = this.collisionBox.getIntersectionDepth(collisionBox);
 
       if (depth.isZero()) { // Stop if we aren't colliding with the current box
@@ -73,19 +65,10 @@ export class Bee extends Enemy {
         this.movement = -1;
       }
 
-      if (isVerticalCollision && isCollidingFromBelow && !collisionItem.passable) { // hitting head on the box
+      if (isVerticalCollision && isCollidingFromBelow && !collisionBox.passable) { // hitting head on the box
         this.position.y += depth.y;
         this.movement = 1;
       }
     });
-  }
-
-  draw() {
-    super.draw();
-    if (gameEngine.isDebugMode) {
-      gameEngine.context.fillStyle = 'red';
-      gameEngine.context.fillText(this.position.x.toString(), this.position.x, this.position.y);
-      gameEngine.context.fillRect(this.collisionBox.left, this.collisionBox.top, this.collisionBox.width, this.collisionBox.height);
-    }
   }
 }

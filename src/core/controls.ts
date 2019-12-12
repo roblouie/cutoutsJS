@@ -7,10 +7,9 @@ class Controls {
     right: false,
     leftControl: false,
     leftShift: false,
-    space: false
+    space: false,
+    p: false
   };
-
-  start: boolean;
 
   controller = {
     leftStick: {
@@ -29,7 +28,8 @@ class Controls {
       bottom: false,
       left: false,
       leftBumper: false,
-      rightBumper: false
+      rightBumper: false,
+      start: false
     },
     triggers: {
       left: 0,
@@ -60,7 +60,7 @@ class Controls {
           this.keyboard.down = true;
           break;
         case 80: // key P pauses the game
-          this.start = true;
+          this.keyboard.p = true;
           break;
         case 16: // shift key
           this.keyboard.leftShift = true;
@@ -87,7 +87,7 @@ class Controls {
           this.keyboard.down = false;
           break;
         case 80: // key P pauses the game
-          this.start = false;
+          this.keyboard.p = false;
           break;
         case 16: // shift key
           this.keyboard.leftShift = false;
@@ -135,6 +135,7 @@ class Controls {
       this.controller.buttons.top = this.gamePads[0].buttons[3].pressed;
       this.controller.buttons.leftBumper = this.gamePads[0].buttons[4].pressed;
       this.controller.buttons.rightBumper = this.gamePads[0].buttons[5].pressed;
+      this.controller.buttons.start = this.gamePads[0].buttons[9].pressed;
       this.controller.triggers.left = Math.abs(leftTrigger) > this.analogDeadZone ? leftTrigger : 0;
       this.controller.triggers.right = Math.abs(rightTrigger) > this.analogDeadZone ? rightTrigger : 0;
     }

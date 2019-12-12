@@ -180,4 +180,13 @@ export class Player extends AnimatedSprite {
       this.frameSize.width - (this.collisionOffsetX * 2),
       this.frameSize.height - this.collisionOffsetBottom);
   }
+
+  draw() {
+    super.draw();
+    if (gameEngine.isDebugMode) {
+      gameEngine.context.fillStyle = 'red';
+      gameEngine.context.fillText(Math.floor(this.position.x / 1280).toString(), this.position.x, this.position.y);
+      gameEngine.context.fillRect(this.collisionBox.left, this.collisionBox.top, this.collisionBox.width, this.collisionBox.height);
+    }
+  }
 }

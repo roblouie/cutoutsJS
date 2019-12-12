@@ -1,22 +1,16 @@
 import defaultExport from './world-1/level-2';
 import {gameEngine} from '../scripts/game-engine';
-import {Coin} from './coin';
-import {GroundCrawler} from "../enemies/ground-crawler";
-import {Enemy} from "../enemies/enemy";
-import {Rabbit} from "../enemies/rabbit";
-import {Bee} from "../enemies/bee";
+import {PlayableSector} from './playable-sector';
+import {Enemy} from '../enemies/enemy';
 
 export class Map {
   width: number;
   height: number;
   previousX: number;
   currentSectors: any[];
-  collectibles: any[];
-  private isDebug: boolean;
   private levelData;
   private artFiles: any[];
   private backgroundFiles: any[];
-  private firstScreen;
   private artImageElements;
   private backgrounds;
 
@@ -31,13 +25,14 @@ export class Map {
     this.levelData = defaultExport;
     this.artFiles = this.levelData.artFiles;
     this.backgroundFiles = this.levelData.backgroundFiles;
-    this.firstScreen = this.levelData.playableSectors[0].artPieces.Item;
     this.width = this.levelData.playableSectors.length * 1280;
-    console.log(this.firstScreen);
     console.log(this.artFiles);
+
+    this.levelData.playableSectors.forEach((playableSector, index, playableSectors) => {
+      playableSectors[index] = new PlayableSector(playableSector);
+    });
+
     this.loadArtFiles();
-    this.loadCoins();
-    this.loadEnemies();
   }
 
   // draw the map adjusted to camera
@@ -69,7 +64,7 @@ export class Map {
   }
 
   private drawLevelForeground(playableSector) {
-    const artArray = playableSector.artPieces.Item;
+    const artArray = playableSector.artPieces;
     artArray.forEach(element => {
       const imageIndex = element.type;
       const image = this.artImageElements[imageIndex];
@@ -82,10 +77,39 @@ export class Map {
   }
 
   private drawEnemies(playableSector) {
-    playableSector.enemies.forEach(enemy => {
+    playableSector.enemies.forEach((enemy, index) => {
+      if (enemy.centerScreenIndex > enemy.ownedScreen) {
+        const oldScreen = enemy.ownedScreen;
+        this.moveEnemyForward(enemy, index);
+        console.log(`Enemy ${enemy.type} changed screens from ${oldScreen} to ${enemy.ownedScreen}`)
+      }
+
+      if (enemy.centerScreenIndex < enemy.ownedScreen) {
+        const oldScreen = enemy.ownedScreen;
+        this.moveEnemyBackwards(enemy, index);
+        console.log(`Enemy ${enemy.type} changed screens from ${oldScreen} to ${enemy.ownedScreen}`)
+      }
+
       enemy.update(this.getCurrentCollisionBoxes());
       enemy.draw();
     });
+  }
+
+  private moveEnemyForward(enemy: Enemy, enemyIndex: number) {
+    this.updateEnemyScreen(enemy, enemyIndex, enemy.ownedScreen + 1);
+  }
+
+  private moveEnemyBackwards(enemy: Enemy, enemyIndex: number) {
+    this.updateEnemyScreen(enemy, enemyIndex, enemy.ownedScreen - 1);
+  }
+
+  private updateEnemyScreen(enemy: Enemy, enemyIndex: number, destinationScreenIndex: number) {
+    this.levelData.playableSectors[enemy.ownedScreen].removeEnemyAt(enemyIndex);
+    enemy.ownedScreen = destinationScreenIndex;
+    if (destinationScreenIndex < this.levelData.playableSectors.length)
+    {
+      this.levelData.playableSectors[destinationScreenIndex].addEnemy(enemy);
+    }
   }
 
   private populateCurrentSectors(cameraPosition) {
@@ -127,81 +151,21 @@ export class Map {
 
   getCurrentCollisionBoxes() {
     return this.currentSectors.reduce((previous, current) => {
-      return previous.concat(current.collisionBoxes.Item);
+      return previous.concat(current.collisionBoxes);
     }, []);
   }
 
   drawDebug(playableSector) {
-    const collisionArray = playableSector.collisionBoxes.Item;
-    collisionArray.forEach(collisionItem => {
-      const collisionBox = collisionItem.collisionBox;
-      if (collisionItem.passable) {
+    playableSector.collisionBoxes.forEach(collisionBox => {
+      if (collisionBox.passable) {
         gameEngine.context.fillStyle = 'green';
-      } else if (collisionItem.killsYou) {
+      } else if (collisionBox.killsYou) {
         gameEngine.context.fillStyle = 'red';
       } else {
         gameEngine.context.fillStyle = 'blue';
       }
-      gameEngine.context.fillRect(collisionBox.x, collisionBox.y, collisionBox.width, collisionBox.height);
+      gameEngine.context.fillRect(collisionBox.left, collisionBox.top, collisionBox.width, collisionBox.height);
     });
-  }
-
-  private loadCoins() {
-    this.levelData.playableSectors.forEach(playableSector => {
-      // The microsoft xml to json results in the locations all being one giant string instead of a collection
-      // of x/y coordinates, so the string is parsed out into x/y coordinates and the resulting object array
-      // is set as a new coins property of the sector.
-      const collectibleRaw = playableSector.collectiblePositions;
-
-      // If the string is empty, there are no collectibles in this sector, set to empty array
-      if (collectibleRaw === '') {
-        playableSector.coins = [];
-      } else {
-        // Otherwise, split every other space so x/y coordinates are paired together, then split
-        // those individually and build objects with x/y positions from them.
-        const splitEveryOtherSpace = collectibleRaw.match(/\b[\w']+(?:[^\w\n]+[\w']+)?\b/g);
-        playableSector.coins = splitEveryOtherSpace.map(coordString => {
-          const [x, y] = coordString.split(' ');
-          return new Coin(Number(x), Number(y));
-        });
-      }
-    });
-  }
-
-  private loadEnemies() {
-    this.levelData.playableSectors.forEach(playableSector => {
-      // The microsoft xml to json results in the enemy positions being either undefined
-      // a list of enemies, or a single enemy.
-      const enemyDataRaw = playableSector.enemyPositions.Item;
-
-      playableSector.enemies = new Array<Enemy>();
-
-     if (Array.isArray(enemyDataRaw)) {
-        // For the list of enemy positions we convert them into enemy objects of the right type
-        playableSector.enemies = enemyDataRaw.map(enemy => {
-          return this.getEnemyFromEnemyPosition(enemy);
-        });
-      } else if (enemyDataRaw !== undefined) {
-        // For the single enemy object, we wrap it it in an array
-        playableSector.enemies.push(this.getEnemyFromEnemyPosition(enemyDataRaw));
-      }
-    });
-  }
-
-  private getEnemyFromEnemyPosition(enemyPosition): Enemy {
-    let enemy: Enemy;
-    switch(enemyPosition.enemyType) {
-      case 'Rabbit':
-        enemy = new Rabbit(enemyPosition.position.x, enemyPosition.position.y);
-        break;
-      case 'GroundCrawler':
-        enemy = new GroundCrawler(enemyPosition.position.x, enemyPosition.position.y);
-        break;
-      case 'Bee':
-        enemy = new Bee(enemyPosition.position.x, enemyPosition.position.y);
-        break;
-    }
-    return enemy;
   }
 }
 
