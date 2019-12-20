@@ -129,6 +129,10 @@ class Controls {
 
       this.controller.leftStick.x = Math.abs(xAxis) > this.analogDeadZone ? xAxis : 0;
       this.controller.leftStick.y = Math.abs(yAxis) > this.analogDeadZone ? yAxis : 0;
+      this.controller.dpad.up = this.gamePads[0].buttons[12].pressed;
+      this.controller.dpad.down = this.gamePads[0].buttons[13].pressed;
+      this.controller.dpad.left = this.gamePads[0].buttons[14].pressed;
+      this.controller.dpad.right = this.gamePads[0].buttons[15].pressed;
       this.controller.buttons.bottom = this.gamePads[0].buttons[0].pressed;
       this.controller.buttons.right = this.gamePads[0].buttons[1].pressed;
       this.controller.buttons.left = this.gamePads[0].buttons[2].pressed;

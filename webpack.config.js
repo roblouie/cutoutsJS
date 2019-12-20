@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: ['./src/scripts/main.ts', './src/index.html'],
+  entry: ['./src/scripts/main.ts', './src/index.html', './src/main.css'],
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist'
@@ -9,7 +9,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.html/,
+        test: /\.(html|css)/,
         loader: 'file-loader?name=[name].[ext]'
       },
       {

@@ -2,8 +2,10 @@
 import controls from '../core/controls';
 import {gameEngine} from './game-engine';
 import {soundService} from '../core/sound';
+import {menuEngine} from '../menu/menu-engine';
 
 gameEngine.initialize(<HTMLCanvasElement> document.getElementById('gameCanvas'));
+menuEngine.initialize(<HTMLCanvasElement> document.getElementById('gameCanvas'));
 
 const Game = { play: null };
 
@@ -19,7 +21,8 @@ const Game = { play: null };
     }
 
     controls.queryControllers();
-    gameEngine.update();
+    //gameEngine.update();
+    menuEngine.update();
   };
 
 
@@ -31,7 +34,8 @@ const Game = { play: null };
     // clear the entire canvas
     gameEngine.context.clearRect(0, 0, gameEngine.canvas.width, gameEngine.canvas.height);
     // redraw all objects
-    gameEngine.draw();
+    //gameEngine.draw();
+    menuEngine.draw();
   };
 
   // Game Loop
@@ -59,5 +63,22 @@ window.onload = function () {
   document.getElementById('mute').onclick = () => {
     soundService.initializeAudioCtx();
   };
+
+  document.getElementById('fullscreen').onclick = () => {
+    const elem = document.getElementById("window");
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+      //@ts-ignore
+    } else if (elem.msRequestFullscreen) {
+      //@ts-ignore
+      elem.msRequestFullscreen();
+      //@ts-ignore
+    } else if (elem.mozRequestFullScreen) {
+      //@ts-ignore
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    }
+  }
 };
 

@@ -47,7 +47,7 @@ export class GameEngine {
 
   update() {
     // Handle pause/unpause of game
-    // TODO: Fix so it only pauses once, not flashes and animates
+    // TODO: Fix so it only pauses once, not flashes and animates (this should be fixed automatically by switching to Pause state
     if (controls.controller.buttons.start || controls.keyboard.p) {
       this.running = !this.running;
     }
