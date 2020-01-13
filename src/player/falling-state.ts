@@ -50,4 +50,8 @@ export class FallingState implements State {
 
   exit() {
   }
+
+  draw() {
+
+  }
 }

@@ -10,10 +10,10 @@ export class MenuControls {
   }
 
   static get Select() {
-    return controls.controller.dpad.right || controls.controller.leftStick.x > 0 || controls.keyboard.right;
+    return controls.controller.buttons.bottom || controls.keyboard.space;
   }
 
   static get GoBack() {
-    return controls.controller.dpad.left || controls.controller.leftStick.x < 0 || controls.keyboard.left;
+    return controls.controller.buttons.right || controls.keyboard.leftShift;
   }
 }

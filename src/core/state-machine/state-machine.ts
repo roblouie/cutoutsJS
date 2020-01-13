@@ -31,4 +31,8 @@ export class StateMachine {
   handleInput() {
     this.currentState.handleInput();
   }
+
+  draw() {
+    this.currentState.draw();
+  }
 }

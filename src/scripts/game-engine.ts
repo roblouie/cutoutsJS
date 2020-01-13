@@ -27,7 +27,8 @@ export class GameEngine {
   }
 
   get context() {
-    return this._context;}
+    return this._context;
+  }
 
   get isDebugMode() {
     return this._isDebugMode;

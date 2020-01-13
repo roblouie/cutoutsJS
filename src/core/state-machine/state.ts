@@ -4,4 +4,5 @@ export class State {
 
   enter(...args: any[]) {};
   exit() {};
+  draw() {};
 }

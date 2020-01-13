@@ -26,7 +26,6 @@ export class Map {
     this.artFiles = this.levelData.artFiles;
     this.backgroundFiles = this.levelData.backgroundFiles;
     this.width = this.levelData.playableSectors.length * 1280;
-    console.log(this.artFiles);
 
     this.levelData.playableSectors.forEach((playableSector, index, playableSectors) => {
       playableSectors[index] = new PlayableSector(playableSector);

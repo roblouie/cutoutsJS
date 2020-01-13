@@ -2,10 +2,13 @@
 import controls from '../core/controls';
 import {gameEngine} from './game-engine';
 import {soundService} from '../core/sound';
-import {menuEngine} from '../menu/menu-engine';
+import {MenuEngine} from '../menu/menu-engine';
+import {gameStateManager} from "../game-state/game-state-manager";
 
-gameEngine.initialize(<HTMLCanvasElement> document.getElementById('gameCanvas'));
-menuEngine.initialize(<HTMLCanvasElement> document.getElementById('gameCanvas'));
+//const menuEngine = new MenuEngine();
+
+// gameEngine.initialize(<HTMLCanvasElement> document.getElementById('gameCanvas'));
+// menuEngine.initialize(<HTMLCanvasElement> document.getElementById('gameCanvas'));
 
 const Game = { play: null };
 
@@ -22,7 +25,9 @@ const Game = { play: null };
 
     controls.queryControllers();
     //gameEngine.update();
-    menuEngine.update();
+    //menuEngine.update();
+    gameStateManager.handleInput();
+    gameStateManager.update();
   };
 
 
@@ -35,7 +40,8 @@ const Game = { play: null };
     gameEngine.context.clearRect(0, 0, gameEngine.canvas.width, gameEngine.canvas.height);
     // redraw all objects
     //gameEngine.draw();
-    menuEngine.draw();
+    //menuEngine.draw();
+    gameStateManager.draw();
   };
 
   // Game Loop

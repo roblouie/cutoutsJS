@@ -81,4 +81,8 @@ export class JumpingState implements State {
       this.player.velocity.y = this.jumpLaunchVelocity * (1 - Math.pow(this.jumpTime / this.maxJumpTime, this.jumpControlPower));
     }
   }
+
+  draw() {
+
+  }
 }

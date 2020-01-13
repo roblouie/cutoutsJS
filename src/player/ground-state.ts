@@ -67,4 +67,8 @@ export class GroundState implements State {
 
   exit() {
   }
+
+  draw() {
+
+  }
 }

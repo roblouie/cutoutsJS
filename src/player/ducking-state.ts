@@ -42,4 +42,8 @@ export class DuckingState implements State{
     console.log('Exiting Ducking State')
   }
 
+  draw() {
+
+  }
+
 }
